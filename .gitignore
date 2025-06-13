@@ -1,0 +1,8 @@
+# Ignore compiled files
+*.ex5
+*.ex4
+*.mqh~
+*.mq5~
+*.tmp
+
+# User files
