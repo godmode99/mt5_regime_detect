@@ -86,12 +86,16 @@ void ResetRegimeFeature(RegimeFeature &feature)
 void FeatureToCSV(const RegimeFeature &feature,string &csvRow)
   {
    /*
-      Convert each field to an integer and build a comma separated
-      row. The field order follows docs/data_dictionary.md and matches
-      ExportUtils.mqh. Example row: "1,0,0,1,0,0,1,2,1,3,0,5".
+      Serialize all struct fields into a comma separated string.
+      Each boolean or enumeration is cast to int so the CSV contains
+      only numeric values. Order of fields matches data_dictionary.md
+      and ExportUtils.mqh:
+      bos,trend_dir,range_compression,volume_spike,divergent,
+      sweep,ob_retest,candle_strength,dir,session,news_flag,mtf_signal
+      Example row: "1,0,0,1,0,0,1,2,1,3,0,5".
    */
 
-  csvRow = IntegerToString((int)feature.bos)              + "," +
+   csvRow = IntegerToString((int)feature.bos)              + "," +
             IntegerToString((int)feature.trend_dir)        + "," +
             IntegerToString((int)feature.range_compression)+ "," +
             IntegerToString((int)feature.volume_spike)     + "," +
