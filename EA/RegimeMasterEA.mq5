@@ -13,7 +13,7 @@
 #define EXPORT_INTERVAL 100                 // export after N bars
 
 // buffer storing features before export
-RegimeFeature g_feature_buffer[EXPORT_INTERVAL];
+RegimeFeature g_feature_buffer[];
 int           g_feature_index = 0;          // current buffer index
 datetime      g_last_bar_time = 0;          // time of last processed bar
 
@@ -25,6 +25,8 @@ int OnInit()
    //--- reset counters on EA initialization
    g_feature_index = 0;
    g_last_bar_time = 0;
+   //--- allocate dynamic feature buffer
+   ArrayResize(g_feature_buffer,EXPORT_INTERVAL);
    return(INIT_SUCCEEDED);
   }
 
@@ -38,7 +40,6 @@ void OnDeinit(const int reason)
      {
       ArrayResize(g_feature_buffer,g_feature_index);
       ExportToCSV(g_feature_buffer,"data\\exported_features.csv");
-      ArrayResize(g_feature_buffer,EXPORT_INTERVAL);
       g_feature_index = 0;
      }
   }
