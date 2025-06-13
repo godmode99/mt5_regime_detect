@@ -36,8 +36,45 @@ bool DetectRangeCompression(const MqlRates rates[], const int bars)
       if(rates[i].low <min_low)  min_low =rates[i].low;
      }
    double range=max_high-min_low;
-   double curr=rates[0].high - rates[0].low;
-   return(curr<range*0.5);
+    double curr=rates[0].high - rates[0].low;
+    return(curr<range*0.5);
+  }
+
+//+------------------------------------------------------------------+
+//| Detect sweep on the latest bar across provided rates             |
+//| input:  rates[] - price series                                   |
+//|         bars    - number of bars to analyze                      |
+//| output: true if sweep condition detected                         |
+//+------------------------------------------------------------------+
+bool DetectSweep(const MqlRates rates[], const int bars)
+  {
+   //--- validate array size against requested lookback
+   if(bars<=0 || ArraySize(rates)<=bars)
+      return(false);
+
+   //--- extract price components and simple ATR approximation
+   double high[];
+   double low[];
+   double close[];
+   double atr[];
+   ArraySetAsSeries(high,true);
+   ArraySetAsSeries(low,true);
+   ArraySetAsSeries(close,true);
+   ArraySetAsSeries(atr,true);
+   ArrayResize(high,bars+1);
+   ArrayResize(low,bars+1);
+   ArrayResize(close,bars+1);
+   ArrayResize(atr,bars+1);
+   for(int i=0;i<=bars && i<ArraySize(rates);i++)
+     {
+      high[i]=rates[i].high;
+      low[i] =rates[i].low;
+      close[i]=rates[i].close;
+      atr[i]  =rates[i].high - rates[i].low;
+     }
+
+   //--- delegate to general sweep detector with 50% wick threshold
+   return(DetectSweep(high,low,close,atr,0,50.0));
   }
 
 //+------------------------------------------------------------------+
