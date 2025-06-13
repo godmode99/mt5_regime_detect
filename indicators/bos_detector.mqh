@@ -25,7 +25,36 @@ bool DetectBOS(const MqlRates rates[], const int shift)
 
    bool bos_up   = rates[shift].high > prev_high;
    bool bos_down = rates[shift].low  < prev_low;
-   return(bos_up || bos_down);
+  return(bos_up || bos_down);
+  }
+
+//+------------------------------------------------------------------+
+//| Detect Break of Structure on current bar using lookback window   |
+//| input:  rates[] - price series                                   |
+//|         bars    - number of previous bars to check               |
+//| output: true if BOS pattern detected                             |
+//+------------------------------------------------------------------+
+bool DetectBOS(const MqlRates rates[], const int bars)
+  {
+   //--- ensure enough bars are available
+   if(bars<=0 || ArraySize(rates)<=bars)
+      return(false);
+
+   //--- prepare temporary high/low arrays for generic detector
+   double high[];
+   double low[];
+   ArraySetAsSeries(high,true);
+   ArraySetAsSeries(low,true);
+   ArrayResize(high,bars+1);
+   ArrayResize(low,bars+1);
+   for(int i=0;i<=bars && i<ArraySize(rates);i++)
+     {
+      high[i]=rates[i].high;
+      low[i] =rates[i].low;
+     }
+
+   //--- call main BOS logic using extracted arrays
+   return(DetectBOS(high,low,0,bars));
   }
 
 //+------------------------------------------------------------------+
