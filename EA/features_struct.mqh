@@ -95,18 +95,18 @@ void FeatureToCSV(const RegimeFeature &feature,string &csvRow)
       Example row: "1,0,0,1,0,0,1,2,1,3,0,5".
    */
 
-   csvRow = IntegerToString((int)feature.bos)              + "," +
-            IntegerToString((int)feature.trend_dir)        + "," +
-            IntegerToString((int)feature.range_compression)+ "," +
-            IntegerToString((int)feature.volume_spike)     + "," +
-            IntegerToString((int)feature.divergent)        + "," +
-            IntegerToString((int)feature.sweep)            + "," +
-            IntegerToString((int)feature.ob_retest)        + "," +
-            IntegerToString((int)feature.candle_strength)  + "," +
-            IntegerToString((int)feature.dir)              + "," +
-            IntegerToString((int)feature.session)          + "," +
-            IntegerToString((int)feature.news_flag)        + "," +
-            IntegerToString(feature.mtf_signal);
+   csvRow  = IntegerToString((int)feature.bos)              + ","  // Break of Structure
+            + IntegerToString((int)feature.trend_dir)        + ","  // Trend direction
+            + IntegerToString((int)feature.range_compression)+ ","  // Range compression flag
+            + IntegerToString((int)feature.volume_spike)     + ","  // Volume spike confirmation
+            + IntegerToString((int)feature.divergent)        + ","  // Volume divergence
+            + IntegerToString((int)feature.sweep)            + ","  // Liquidity sweep
+            + IntegerToString((int)feature.ob_retest)        + ","  // Order Block retest
+            + IntegerToString((int)feature.candle_strength)  + ","  // Candle momentum strength
+            + IntegerToString((int)feature.dir)              + ","  // Candle direction
+            + IntegerToString((int)feature.session)          + ","  // Market session
+            + IntegerToString((int)feature.news_flag)        + ","  // News event flag
+            + IntegerToString(feature.mtf_signal);                 // Multi time frame signal
   }
 
 //+------------------------------------------------------------------+
