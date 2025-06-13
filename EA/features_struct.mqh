@@ -114,6 +114,6 @@ void FeatureToCSV(const RegimeFeature &feature,string &csvRow)
 //| input:  feature - struct with calculated values                  |
 //| output: csvRow - string reference to receive CSV result          |
 //+------------------------------------------------------------------+
-void FeatureToCSV(const RegimeFeature &feature, string &csvRow);
+
 
 #endif // FEATURES_STRUCT_MQH
