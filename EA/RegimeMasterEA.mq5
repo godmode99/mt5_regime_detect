@@ -64,6 +64,13 @@ void OnTick()
       RegimeFeature feature;
       ProcessBar(shift,feature);   // fill feature struct for this bar
 
+      //--- validate before buffering/export
+      if(!ValidateFeature(feature))
+        {
+         PrintFormat("Invalid feature data at shift %d - skipped",shift);
+         continue;
+        }
+
       //--- store result in buffer for batch export
       g_feature_buffer[g_feature_index] = feature;
       g_feature_index++;
@@ -120,6 +127,13 @@ void ProcessBar(const int shift, RegimeFeature &feature)
 //+------------------------------------------------------------------+
 void ExportCurrentFeature(const RegimeFeature &feature)
   {
+   //--- ensure data is valid before export
+   if(!ValidateFeature(feature))
+     {
+      Print("Invalid feature - not exported");
+      return;
+     }
+
    RegimeFeature arr[1];
    arr[0]=feature;
    // delegate to ExportToCSV for single row export
