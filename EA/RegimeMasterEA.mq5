@@ -98,17 +98,17 @@ void ProcessBar(const int shift, RegimeFeature &feature)
    CopyTickVolume(_Symbol,_Period,shift,50,volumes);
 
    //--- populate a few core fields using indicator modules
-   feature.bos          = DetectBOS(rates,shift);          // break of structure
-   feature.sweep        = DetectSweep(rates,shift);        // liquidity sweep
-   feature.volume_spike = DetectVolumeSpike(volumes,shift); // volume spike
-   feature.ob_retest    = DetectOBRetest(rates,shift);     // order block retest
-   feature.candle_strength = GetCandleStrength(rates,shift); // candle momentum
+   feature.bos          = DetectBOS(rates,0);              // break of structure
+   feature.sweep        = DetectSweep(rates,0);            // liquidity sweep
+   feature.volume_spike = DetectVolumeSpike(volumes,0);    // volume spike
+   feature.ob_retest    = DetectOBRetest(rates,0);         // order block retest
+   feature.candle_strength = GetCandleStrength(rates,0);   // candle momentum
    feature.session      = GetMarketSession(rates[shift].time); // session context
 
    feature.range_compression = DetectRangeCompression(rates,HISTORY_BARS); // detect sideway compression
-   feature.divergent        = DetectVolumeDivergence(volumes,rates,shift); // check volume divergence
+   feature.divergent        = DetectVolumeDivergence(volumes,rates,0);     // check volume divergence
    feature.trend_dir        = GetTrendDirection(rates,HISTORY_BARS);       // overall trend direction
-   feature.dir              = GetCandleDirection(rates,shift);             // candle direction
+   feature.dir              = GetCandleDirection(rates,0);                 // candle direction
    feature.news_flag        = IsNewsEvent(rates[shift].time);              // flag news events
    feature.mtf_signal       = GetMTFSignal(rates,HISTORY_BARS);            // multi time frame signal
   }
