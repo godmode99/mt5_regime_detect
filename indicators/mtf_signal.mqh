@@ -25,24 +25,8 @@ int GetMTFSignal(const MqlRates rates[], const int bars)
    if(copied_htf<=0 || copied_ltf<=0 || ArraySize(rates)<=bars)
       return(0);
 
-   //--- indicator checks on different timeframes
-   bool bos_htf         = DetectBOS(htf,0);             // BOS on H1
-   TrendDirection dir   = GetTrendDirection(htf,bars);  // trend from H1
-   bool volume_spike_lf = DetectVolumeSpike(ltf,0);     // volume spike on M5
-
-   //--- combine results using a simple bit mask
-   // bit0 -> BOS detected on H1
-   // bit1 -> Uptrend on H1
-   // bit2 -> Volume spike on M5
-   int signal = 0;
-   if(bos_htf)
-      signal |= 1;
-   if(dir==TREND_UP)
-      signal |= 2;
-   if(volume_spike_lf)
-      signal |= 4;
-
-   return(signal);
+   //--- aggregate signals using helper
+   return(AggregateMTFSignal(htf, ltf, bars));
   }
 
 #endif // MTF_SIGNAL_MQH
