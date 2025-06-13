@@ -1,11 +1,11 @@
-#include "features_struct.mqh"
-#include "ExportUtils.mqh"
-#include "..\indicators\bos_detector.mqh"
-#include "..\indicators\sweep_detector.mqh"
-#include "..\indicators\volume_tools.mqh"
-#include "..\indicators\ob_retest.mqh"
-#include "..\indicators\candle_momentum.mqh"
-#include "..\indicators\session_tools.mqh"
+#include "features_struct.mqh"           // struct definition for RegimeFeature
+#include "ExportUtils.mqh"               // helpers for CSV/JSON export
+#include "..\indicators\bos_detector.mqh"     // Break of Structure detection
+#include "..\indicators\sweep_detector.mqh"   // Liquidity sweep detection
+#include "..\indicators\volume_tools.mqh"     // Volume spike/divergence tools
+#include "..\indicators\ob_retest.mqh"        // Order Block retest detector
+#include "..\indicators\candle_momentum.mqh"  // Candle strength/direction tools
+#include "..\indicators\session_tools.mqh"    // Session and news utilities
 
 //+------------------------------------------------------------------+
 //| Constants and global storage                                     |
@@ -50,24 +50,24 @@ void OnDeinit(const int reason)
 //+------------------------------------------------------------------+
 void OnTick()
   {
-   //--- process once per new completed bar
+   //--- process logic only when a new bar is formed
    datetime bar_time = iTime(_Symbol,_Period,0);
    if(bar_time==g_last_bar_time)
       return;                       // exit until new bar is formed
 
    g_last_bar_time = bar_time;
 
-   //--- gather features for recent HISTORY_BARS closed bars
+   //--- gather regime features for a window of recent bars
    for(int shift=1; shift<=HISTORY_BARS; shift++)
      {
       RegimeFeature feature;
-      ProcessBar(shift,feature);
+      ProcessBar(shift,feature);   // fill feature struct for this bar
 
-      //--- store in buffer for batch export
+      //--- store result in buffer for batch export
       g_feature_buffer[g_feature_index] = feature;
       g_feature_index++;
 
-      //--- export once buffer becomes full
+      //--- export buffer to CSV when EXPORT_INTERVAL rows collected
       if(g_feature_index>=EXPORT_INTERVAL)
         {
          ExportToCSV(g_feature_buffer,"data\\exported_features.csv");
@@ -96,12 +96,16 @@ void ProcessBar(const int shift, RegimeFeature &feature)
    ArraySetAsSeries(volumes,true);
    CopyTickVolume(_Symbol,_Period,shift,50,volumes);
 
-   //--- calculate selected example features
-   feature.bos          = DetectBOS(rates,shift);
-   feature.sweep        = DetectSweep(rates,shift);
-   feature.volume_spike = DetectVolumeSpike(volumes,shift);
+   //--- populate a few core fields using indicator modules
+   feature.bos          = DetectBOS(rates,shift);          // break of structure
+   feature.sweep        = DetectSweep(rates,shift);        // liquidity sweep
+   feature.volume_spike = DetectVolumeSpike(volumes,shift); // volume spike
+   feature.ob_retest    = DetectOBRetest(rates,shift);     // order block retest
+   feature.candle_strength = GetCandleStrength(rates,shift); // candle momentum
+   feature.session      = GetMarketSession(rates[shift].time); // session context
 
-   //--- other fields would be filled here in a full implementation
+   // TODO: fill remaining fields such as range_compression, divergent,
+   //       trend_dir, candle direction, news_flag and mtf_signal
   }
 
 //+------------------------------------------------------------------+
@@ -113,5 +117,7 @@ void ExportCurrentFeature(const RegimeFeature &feature)
   {
    RegimeFeature arr[1];
    arr[0]=feature;
+   // delegate to ExportToCSV for single row export
    ExportToCSV(arr,"data\\exported_features.csv");
   }
+
