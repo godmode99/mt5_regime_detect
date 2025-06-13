@@ -3,6 +3,8 @@
 #include "..\\indicators\\bos_detector.mqh"
 #include "..\\indicators\\volume_tools.mqh"
 #include "..\\indicators\\sweep_detector.mqh"
+#include "..\\indicators\\mtf_signal.mqh"
+#include "..\\indicators\\mtf_tools.mqh"
 
 //+------------------------------------------------------------------+
 //| Helper assertion function                                        |
@@ -74,14 +76,58 @@ void TestDetectSweep()
   }
 
 //+------------------------------------------------------------------+
+//| Test GetMTFSignal                                                |
+//+------------------------------------------------------------------+
+void TestGetMTFSignal()
+  {
+   const int bars = 3;
+
+   // prepare deterministic higher timeframe (H1) data
+   MqlRates htf[21];
+   MqlRates ltf[21];
+   ArraySetAsSeries(htf,true);
+   ArraySetAsSeries(ltf,true);
+
+   for(int i=0; i<21; i++)
+     {
+      htf[i].high        = 1.1000 + i*0.0010;
+      htf[i].low         = 1.0900 + i*0.0010;
+      htf[i].close       = 1.0950 + i*0.0010;
+      htf[i].tick_volume = 100;
+
+      ltf[i].high        = 1.1000 + i*0.0002;
+      ltf[i].low         = 1.0990 - i*0.0002;
+      ltf[i].close       = 1.0995 + i*0.0002;
+      ltf[i].tick_volume = (i==0 ? 200 : 100); // spike on latest bar
+     }
+
+   // induce break of structure and uptrend on H1
+   htf[0].high  = 1.2000;
+   htf[0].close = 1.1950;
+
+   // base timeframe rates (reuse htf for simplicity)
+   MqlRates rates[4];
+   ArraySetAsSeries(rates,true);
+   for(int i=0;i<4;i++)
+      rates[i] = htf[i];
+
+   // expected bit mask from direct aggregation
+   int expected = AggregateMTFSignal(htf, ltf, bars);
+   int actual   = GetMTFSignal(rates, bars);
+
+   AssertEqual(true, expected==actual, "GetMTFSignal - cross timeframe signal");
+  }
+
+//+------------------------------------------------------------------+
 //| Entry point to execute all tests                                 |
 //+------------------------------------------------------------------+
 int OnStart()
   {
-   Print("Running indicator unit tests");
-   TestDetectBOS();
-   TestDetectVolumeSpike();
-   TestDetectSweep();
-   return(0);
+  Print("Running indicator unit tests");
+  TestDetectBOS();
+  TestDetectVolumeSpike();
+  TestDetectSweep();
+  TestGetMTFSignal();
+  return(0);
   }
 
