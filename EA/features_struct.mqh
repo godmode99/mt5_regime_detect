@@ -109,11 +109,4 @@ void FeatureToCSV(const RegimeFeature &feature,string &csvRow)
             + IntegerToString(feature.mtf_signal);                 // Multi time frame signal
   }
 
-//+------------------------------------------------------------------+
-//| Convert RegimeFeature to CSV string                              |
-//| input:  feature - struct with calculated values                  |
-//| output: csvRow - string reference to receive CSV result          |
-//+------------------------------------------------------------------+
-
-
 #endif // FEATURES_STRUCT_MQH
