@@ -99,19 +99,39 @@ void ProcessBar(const int shift, RegimeFeature &feature)
    //--- gather required history arrays
   MqlRates rates[];
   ArraySetAsSeries(rates,true);
-  CopyRates(_Symbol,_Period,shift,50,rates);
+  int copied_rates = CopyRates(_Symbol,_Period,shift,50,rates);
+  if(copied_rates<=0)
+    {
+     PrintFormat("CopyRates failed for %s %s shift %d",_Symbol,_Period,shift);
+     return;
+    }
 
   //--- gather multi-timeframe history used for aggregation
   MqlRates htf[];
   MqlRates ltf[];
   ArraySetAsSeries(htf,true);
   ArraySetAsSeries(ltf,true);
-  CopyRates(_Symbol,PERIOD_H1,shift,50,htf);
-  CopyRates(_Symbol,PERIOD_M5,shift,50,ltf);
+  int copied_htf = CopyRates(_Symbol,PERIOD_H1,shift,50,htf);
+  if(copied_htf<=0)
+    {
+     PrintFormat("CopyRates failed for H1 shift %d",shift);
+     return;
+    }
+  int copied_ltf = CopyRates(_Symbol,PERIOD_M5,shift,50,ltf);
+  if(copied_ltf<=0)
+    {
+     PrintFormat("CopyRates failed for M5 shift %d",shift);
+     return;
+    }
 
   long volumes[];
   ArraySetAsSeries(volumes,true);
-  CopyTickVolume(_Symbol,_Period,shift,50,volumes);
+  int copied_vols = CopyTickVolume(_Symbol,_Period,shift,50,volumes);
+  if(copied_vols<=0)
+    {
+     PrintFormat("CopyTickVolume failed for shift %d",shift);
+     return;
+    }
 
    //--- populate a few core fields using indicator modules
    feature.bos          = DetectBOS(rates,0);              // break of structure
