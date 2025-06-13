@@ -15,7 +15,7 @@ The table below defines every field exported from the `RegimeFeature` struct. Al
 | dir | enum | Candle direction | `0`=DIR_NONE, `1`=DIR_BULL, `2`=DIR_BEAR | n/a | `1` | `GetCandleDirection` compares close vs. open price. |
 | session | enum | Market session context | `0`=SESSION_UNKNOWN, `1`=SESSION_ASIA, `2`=SESSION_EUROPE, `3`=SESSION_US | n/a | `3` | `GetMarketSession` derives the session from bar time hour. |
 | news_flag | bool | News event flag | `0` = false, `1` = true | n/a | `0` | `IsNewsEvent` placeholder to mark major economic news. |
-| mtf_signal | int | Multi time frame cross‑check signal | numeric code | n/a | `5` | Aggregated signal combining other timeframe indicators. |
+| mtf_signal | int | Multi time frame cross‑check signal | numeric code | n/a | `5` | Bitmask from H1 BOS, H1 trend, and M5 volume spike. |
 
 ## Sample Data
 
