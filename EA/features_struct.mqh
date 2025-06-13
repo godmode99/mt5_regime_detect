@@ -57,7 +57,26 @@ struct RegimeFeature
 //| input:  feature - struct to reset                                |
 //| output: none                                                     |
 //+------------------------------------------------------------------+
-void ResetRegimeFeature(RegimeFeature &feature);
+void ResetRegimeFeature(RegimeFeature &feature)
+  {
+   //--- clear all boolean flags
+   feature.bos              = false;           // Break of Structure
+   feature.range_compression= false;           // Compression/expansion state
+   feature.volume_spike     = false;           // Volume spike confirmation
+   feature.divergent        = false;           // Volume divergence
+   feature.sweep            = false;           // Liquidity sweep detected
+   feature.ob_retest        = false;           // Order block retest flag
+   feature.news_flag        = false;           // News event flag
+
+   //--- reset enumeration values
+   feature.trend_dir        = TREND_NONE;      // Unknown trend direction
+   feature.candle_strength  = STRENGTH_NONE;   // No candle momentum
+   feature.dir              = DIR_NONE;        // Candle direction
+   feature.session          = SESSION_UNKNOWN; // Market session context
+
+   //--- reset numeric fields
+   feature.mtf_signal       = 0;               // Multi time frame signal
+  }
 
 //+------------------------------------------------------------------+
 //| Convert RegimeFeature to CSV string                              |
