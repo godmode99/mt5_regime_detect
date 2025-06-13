@@ -10,7 +10,8 @@
 //+------------------------------------------------------------------+
 //| Constants and global storage                                     |
 //+------------------------------------------------------------------+
-#define EXPORT_INTERVAL 100                 // export after N bars
+#define EXPORT_INTERVAL 100                 // export after N feature rows
+#define HISTORY_BARS    10                  // number of historical bars to process
 
 // buffer storing features before export
 RegimeFeature g_feature_buffer[];
@@ -56,19 +57,22 @@ void OnTick()
 
    g_last_bar_time = bar_time;
 
-   //--- fill feature struct using closed bar (shift=1)
-   RegimeFeature feature;
-   ProcessBar(1,feature);
-
-   //--- store in circular buffer
-   g_feature_buffer[g_feature_index] = feature;
-   g_feature_index++;
-
-   //--- export periodically
-   if(g_feature_index>=EXPORT_INTERVAL)
+   //--- gather features for recent HISTORY_BARS closed bars
+   for(int shift=1; shift<=HISTORY_BARS; shift++)
      {
-      ExportToCSV(g_feature_buffer,"data\\exported_features.csv");
-      g_feature_index = 0;
+      RegimeFeature feature;
+      ProcessBar(shift,feature);
+
+      //--- store in buffer for batch export
+      g_feature_buffer[g_feature_index] = feature;
+      g_feature_index++;
+
+      //--- export once buffer becomes full
+      if(g_feature_index>=EXPORT_INTERVAL)
+        {
+         ExportToCSV(g_feature_buffer,"data\\exported_features.csv");
+         g_feature_index = 0;
+        }
      }
   }
 
