@@ -81,8 +81,35 @@ void ResetRegimeFeature(RegimeFeature &feature)
 //+------------------------------------------------------------------+
 //| Convert RegimeFeature to CSV string                              |
 //| input:  feature - struct with calculated values                  |
-//| output: CSV formatted string                                     |
+//| output: csvRow - string reference to receive CSV result          |
 //+------------------------------------------------------------------+
-string FeatureToCSV(const RegimeFeature &feature);
+void FeatureToCSV(const RegimeFeature &feature,string &csvRow)
+  {
+   /*
+      Convert each field to an integer and build a comma separated
+      row. The field order follows docs/data_dictionary.md and matches
+      ExportUtils.mqh. Example row: "1,0,0,1,0,0,1,2,1,3,0,5".
+   */
+
+  csvRow = IntegerToString((int)feature.bos)              + "," +
+            IntegerToString((int)feature.trend_dir)        + "," +
+            IntegerToString((int)feature.range_compression)+ "," +
+            IntegerToString((int)feature.volume_spike)     + "," +
+            IntegerToString((int)feature.divergent)        + "," +
+            IntegerToString((int)feature.sweep)            + "," +
+            IntegerToString((int)feature.ob_retest)        + "," +
+            IntegerToString((int)feature.candle_strength)  + "," +
+            IntegerToString((int)feature.dir)              + "," +
+            IntegerToString((int)feature.session)          + "," +
+            IntegerToString((int)feature.news_flag)        + "," +
+            IntegerToString(feature.mtf_signal);
+  }
+
+//+------------------------------------------------------------------+
+//| Convert RegimeFeature to CSV string                              |
+//| input:  feature - struct with calculated values                  |
+//| output: csvRow - string reference to receive CSV result          |
+//+------------------------------------------------------------------+
+void FeatureToCSV(const RegimeFeature &feature, string &csvRow);
 
 #endif // FEATURES_STRUCT_MQH
