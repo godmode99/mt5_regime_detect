@@ -14,6 +14,7 @@
    - รวม logic indicator ทุกชนิดไว้ใน EA เดียว
    - คำนวณ feature หลัก เช่น BOS, Sweep, Volume Spike, OB Retest, Candle Strength, Session, Multi-TF
    - Fill struct (RegimeFeature) ต่อแท่งเทียน/บาร์
+   - Validate แต่ละ feature ด้วย `ValidateFeature` หากไม่ผ่านจะ log และไม่ export
    - Export ข้อมูลเป็น .csv/.json ตาม format ที่ lock ไว้
 
 2. **Data Export**
