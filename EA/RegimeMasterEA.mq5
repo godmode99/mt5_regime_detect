@@ -7,21 +7,42 @@
 #include "..\indicators\candle_momentum.mqh"
 #include "..\indicators\session_tools.mqh"
 
-// Expert initialization function
+//+------------------------------------------------------------------+
+//| Expert initialization function                                   |
+//+------------------------------------------------------------------+
 int OnInit()
   {
    // TODO: initialization logic
    return(INIT_SUCCEEDED);
   }
 
-// Expert deinitialization function
+//+------------------------------------------------------------------+
+//| Expert deinitialization function                                 |
+//+------------------------------------------------------------------+
 void OnDeinit(const int reason)
   {
    // TODO: cleanup logic
   }
 
-// Expert tick function
+//+------------------------------------------------------------------+
+//| Expert tick function                                             |
+//+------------------------------------------------------------------+
 void OnTick()
   {
    // TODO: main regime detection workflow
   }
+
+//+------------------------------------------------------------------+
+//| Process current bar and fill feature struct                      |
+//| input:  shift   - bar shift to analyze                           |
+//|         feature - struct to populate with values                 |
+//| output: none                                                     |
+//+------------------------------------------------------------------+
+void ProcessBar(const int shift, RegimeFeature &feature);
+
+//+------------------------------------------------------------------+
+//| Export collected features after validation                       |
+//| input:  feature - calculated feature struct                      |
+//| output: none                                                     |
+//+------------------------------------------------------------------+
+void ExportCurrentFeature(const RegimeFeature &feature);
