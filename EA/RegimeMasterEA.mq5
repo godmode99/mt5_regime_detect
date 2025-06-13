@@ -8,6 +8,7 @@
 #include "..\indicators\session_tools.mqh"    // Session and news utilities
 
 #include "..\indicators\mtf_signal.mqh"        // Multi time frame signal
+#include "..\indicators\mtf_tools.mqh"         // Aggregation helpers for MTF
 //+------------------------------------------------------------------+
 //| Constants and global storage                                     |
 //+------------------------------------------------------------------+
@@ -96,13 +97,21 @@ void ProcessBar(const int shift, RegimeFeature &feature)
    ResetRegimeFeature(feature);
 
    //--- gather required history arrays
-   MqlRates rates[];
-   ArraySetAsSeries(rates,true);
-   CopyRates(_Symbol,_Period,shift,50,rates);
+  MqlRates rates[];
+  ArraySetAsSeries(rates,true);
+  CopyRates(_Symbol,_Period,shift,50,rates);
 
-   long volumes[];
-   ArraySetAsSeries(volumes,true);
-   CopyTickVolume(_Symbol,_Period,shift,50,volumes);
+  //--- gather multi-timeframe history used for aggregation
+  MqlRates htf[];
+  MqlRates ltf[];
+  ArraySetAsSeries(htf,true);
+  ArraySetAsSeries(ltf,true);
+  CopyRates(_Symbol,PERIOD_H1,shift,50,htf);
+  CopyRates(_Symbol,PERIOD_M5,shift,50,ltf);
+
+  long volumes[];
+  ArraySetAsSeries(volumes,true);
+  CopyTickVolume(_Symbol,_Period,shift,50,volumes);
 
    //--- populate a few core fields using indicator modules
    feature.bos          = DetectBOS(rates,0);              // break of structure
@@ -117,7 +126,7 @@ void ProcessBar(const int shift, RegimeFeature &feature)
    feature.trend_dir        = GetTrendDirection(rates,HISTORY_BARS);       // overall trend direction
    feature.dir              = GetCandleDirection(rates,0);                 // candle direction
    feature.news_flag        = IsNewsEvent(rates[shift].time);              // flag news events
-   feature.mtf_signal       = GetMTFSignal(rates,HISTORY_BARS);            // multi time frame signal
+   feature.mtf_signal       = AggregateMTFSignal(htf,ltf,HISTORY_BARS);    // multi time frame signal
   }
 
 //+------------------------------------------------------------------+
