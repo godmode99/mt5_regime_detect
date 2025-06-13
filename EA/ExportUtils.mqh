@@ -84,19 +84,26 @@ bool ValidateFeature(const RegimeFeature &feature)
 //| output: none                                                     |
 //|                                                                  |
 //| The CSV format uses a header row followed by numeric values.     |
+//| Existing files are not overwritten. New rows are appended to the |
+//| end so historical data is preserved.                             |
 //| Sample row: "1,0,0,1,0,0,1,2,1,3,0,5"                            |
 //+------------------------------------------------------------------+
 void ExportToCSV(RegimeFeature &features[], const string filename)
   {
-   //--- attempt to open file for writing as CSV
-   int handle = FileOpen(filename, FILE_WRITE|FILE_CSV|FILE_ANSI);
-   if(handle==INVALID_HANDLE)
-      return;                       // stop if file cannot be opened
+  //--- open the file for read/write so we can append if it already exists
+  bool exists = FileIsExist(filename);
+  int handle = FileOpen(filename,
+                        FILE_READ|FILE_WRITE|FILE_CSV|FILE_ANSI|FILE_SHARE_WRITE);
+  if(handle==INVALID_HANDLE)
+     return;                       // stop if file cannot be opened
 
-   //--- write CSV header matching data_dictionary.md
-   FileWrite(handle,
-             "bos,trend_dir,range_compression,volume_spike,divergent,"
-             "sweep,ob_retest,candle_strength,dir,session,news_flag,mtf_signal");
+  //--- if file already exists seek to end, otherwise write header
+  if(exists)
+     FileSeek(handle,0,SEEK_END);
+  else
+     FileWrite(handle,
+               "bos,trend_dir,range_compression,volume_spike,divergent,"
+               "sweep,ob_retest,candle_strength,dir,session,news_flag,mtf_signal");
 
    //--- iterate over feature array and output each struct as CSV row
    int total = ArraySize(features);

@@ -19,6 +19,7 @@
 2. **Data Export**
 
    - Export dataset ทุกฟีเจอร์ (field ครบ) ไว้ใน `data/exported_features.csv`
+     โดยไฟล์จะถูกเปิดแบบ append เพื่อไม่ลบทับข้อมูลเดิม
    - รองรับ feed ไป GPT/ML/Automation ภายนอก
 
 3. **Integration**
