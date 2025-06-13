@@ -23,7 +23,37 @@ MarketSession GetMarketSession(const datetime time)
 //+------------------------------------------------------------------+
 bool IsNewsEvent(const datetime time)
   {
-   // Placeholder implementation - always false
+   /*
+      Check the built‑in economic calendar for high impact events
+      scheduled around the provided timestamp.  news_flag in the
+      feature struct is set to true when at least one high importance
+      release occurs within the specified window.  RegimeMasterEA.mq5
+      simply calls this helper for each bar time.
+   */
+
+   const int window_minutes = 30;          // \u00b1 30 minute range
+   datetime from = time - window_minutes*60;
+   datetime to   = time + window_minutes*60;
+
+   //--- request calendar values for the symbol base currency
+   string base = StringSubstr(_Symbol,0,3);        // e.g. "EURUSD" -> "EUR"
+   MqlCalendarValue values[];
+   ArraySetAsSeries(values,true);
+
+   int total = CalendarValueHistory(base,from,to,values);
+   if(total<=0)
+      return(false);
+
+   //--- check each event's importance via CalendarEventById
+   for(int i=0;i<total;i++)
+     {
+      MqlCalendarEvent ev;
+      if(CalendarEventById((int)values[i].event_id,ev)==0)
+         continue;
+      if(ev.importance==CALENDAR_IMPORTANCE_HIGH)
+         return(true);           // high impact news found
+     }
+
    return(false);
   }
 
