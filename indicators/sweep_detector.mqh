@@ -7,7 +7,16 @@
 //|         shift   - bar index to evaluate                           |
 //| output: true if sweep pattern detected                            |
 //+------------------------------------------------------------------+
-bool DetectSweep(const MqlRates rates[], const int shift);
+bool DetectSweep(const MqlRates rates[], const int shift)
+  {
+   if(shift>=ArraySize(rates))
+      return(false);
+   double atr=rates[shift].high - rates[shift].low;
+   double upper=rates[shift].high - rates[shift].close;
+   double lower=rates[shift].close - rates[shift].low;
+   double limit=atr*0.5; // 50% of ATR
+   return(upper>limit || lower>limit);
+  }
 
 //+------------------------------------------------------------------+
 //| Check for range compression / expansion                          |
@@ -15,7 +24,21 @@ bool DetectSweep(const MqlRates rates[], const int shift);
 //|         bars    - bars to evaluate                                |
 //| output: true if compression detected                              |
 //+------------------------------------------------------------------+
-bool DetectRangeCompression(const MqlRates rates[], const int bars);
+bool DetectRangeCompression(const MqlRates rates[], const int bars)
+  {
+   if(bars<=0 || ArraySize(rates)<=bars)
+      return(false);
+   double max_high=rates[0].high;
+   double min_low =rates[0].low;
+   for(int i=1;i<bars;i++)
+     {
+      if(rates[i].high>max_high) max_high=rates[i].high;
+      if(rates[i].low <min_low)  min_low =rates[i].low;
+     }
+   double range=max_high-min_low;
+   double curr=rates[0].high - rates[0].low;
+   return(curr<range*0.5);
+  }
 
 //+------------------------------------------------------------------+
 //| Detect sweep using wick vs ATR threshold                         |

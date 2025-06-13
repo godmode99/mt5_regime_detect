@@ -7,7 +7,10 @@
 //|         shift     - bar index                                     |
 //| output: true if spike detected                                    |
 //+------------------------------------------------------------------+
-bool DetectVolumeSpike(const long volumes[], const int shift);
+bool DetectVolumeSpike(const long volumes[], const int shift)
+  {
+   return(DetectVolumeSpike(volumes,shift,1.5));
+  }
 
 //+------------------------------------------------------------------+
 //| Detect volume divergence                                         |
@@ -16,7 +19,14 @@ bool DetectVolumeSpike(const long volumes[], const int shift);
 //|         shift     - bar index                                     |
 //| output: true if divergence found                                  |
 //+------------------------------------------------------------------+
-bool DetectVolumeDivergence(const long volumes[], const MqlRates prices[], const int shift);
+bool DetectVolumeDivergence(const long volumes[], const MqlRates prices[], const int shift)
+  {
+   if(shift+1>=ArraySize(volumes) || shift+1>=ArraySize(prices))
+      return(false);
+   double price_delta=prices[shift].close - prices[shift+1].close;
+   long   vol_delta=volumes[shift] - volumes[shift+1];
+   return((price_delta>0 && vol_delta<0) || (price_delta<0 && vol_delta>0));
+  }
 
 //+------------------------------------------------------------------+
 //| Detect volume spike using lookback average                       |

@@ -7,7 +7,26 @@
 //|         shift   - bar index to evaluate                           |
 //| output: true if BOS pattern found                                 |
 //+------------------------------------------------------------------+
-bool DetectBOS(const MqlRates rates[], const int shift);
+bool DetectBOS(const MqlRates rates[], const int shift)
+  {
+   const int window = 3;
+   if(shift + window >= ArraySize(rates))
+      return(false);
+
+   double prev_high = rates[shift+1].high;
+   double prev_low  = rates[shift+1].low;
+   for(int i=shift+2;i<=shift+window;i++)
+     {
+      if(rates[i].high > prev_high)
+         prev_high = rates[i].high;
+      if(rates[i].low < prev_low)
+         prev_low = rates[i].low;
+     }
+
+   bool bos_up   = rates[shift].high > prev_high;
+   bool bos_down = rates[shift].low  < prev_low;
+   return(bos_up || bos_down);
+  }
 
 //+------------------------------------------------------------------+
 //| Detect Break of Structure using high/low arrays                  |
@@ -53,6 +72,18 @@ bool DetectBOS(const double &high[],  // high price series
 //|         bars    - number of bars to analyze                       |
 //| output: TrendDirection enumeration value                          |
 //+------------------------------------------------------------------+
-TrendDirection GetTrendDirection(const MqlRates rates[], const int bars);
+TrendDirection GetTrendDirection(const MqlRates rates[], const int bars)
+  {
+   if(bars<=0 || ArraySize(rates)<=bars)
+      return(TREND_NONE);
+
+   double start=rates[bars].close;
+   double end=rates[0].close;
+   if(end>start)
+      return(TREND_UP);
+   if(end<start)
+      return(TREND_DOWN);
+   return(TREND_NONE);
+  }
 
 #endif // BOS_DETECTOR_MQH

@@ -26,6 +26,58 @@ void ExportFeatureJSON(const RegimeFeature &feature);
 bool ValidateFeature(const RegimeFeature &feature);
 
 //+------------------------------------------------------------------+
+//| Write single feature struct to default CSV path                  |
+//+------------------------------------------------------------------+
+void ExportFeatureCSV(const RegimeFeature &feature)
+  {
+   RegimeFeature arr[1];
+   arr[0]=feature;
+   ExportToCSV(arr,"data\\exported_features.csv");
+  }
+
+//+------------------------------------------------------------------+
+//| Export feature struct to JSON file                                |
+//+------------------------------------------------------------------+
+void ExportFeatureJSON(const RegimeFeature &feature)
+  {
+   string json=StringFormat("{\"bos\":%d,\"trend_dir\":%d,\"range_compression\":%d,\"volume_spike\":%d,\"divergent\":%d,\"sweep\":%d,\"ob_retest\":%d,\"candle_strength\":%d,\"dir\":%d,\"session\":%d,\"news_flag\":%d,\"mtf_signal\":%d}",
+                           (int)feature.bos,
+                           (int)feature.trend_dir,
+                           (int)feature.range_compression,
+                           (int)feature.volume_spike,
+                           (int)feature.divergent,
+                           (int)feature.sweep,
+                           (int)feature.ob_retest,
+                           (int)feature.candle_strength,
+                           (int)feature.dir,
+                           (int)feature.session,
+                           (int)feature.news_flag,
+                           feature.mtf_signal);
+   int handle=FileOpen("data\\exported_features.json",FILE_WRITE|FILE_TXT|FILE_ANSI|FILE_APPEND);
+   if(handle!=INVALID_HANDLE)
+     {
+      FileWrite(handle,json);
+      FileClose(handle);
+     }
+  }
+
+//+------------------------------------------------------------------+
+//| Basic validation of feature values                                |
+//+------------------------------------------------------------------+
+bool ValidateFeature(const RegimeFeature &feature)
+  {
+   if(feature.trend_dir < TREND_NONE || feature.trend_dir > TREND_DOWN)
+      return(false);
+   if(feature.candle_strength < STRENGTH_NONE || feature.candle_strength > STRENGTH_STRONG)
+      return(false);
+   if(feature.dir < DIR_NONE || feature.dir > DIR_BEAR)
+      return(false);
+   if(feature.session < SESSION_UNKNOWN || feature.session > SESSION_US)
+      return(false);
+   return(true);
+  }
+
+//+------------------------------------------------------------------+
 //| Export array of RegimeFeature structs to CSV file                |
 //| input:  features[] - array of calculated features                |
 //|         filename   - path to write CSV data                      |
