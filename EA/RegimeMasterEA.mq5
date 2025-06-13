@@ -8,11 +8,23 @@
 #include "..\indicators\session_tools.mqh"
 
 //+------------------------------------------------------------------+
+//| Constants and global storage                                     |
+//+------------------------------------------------------------------+
+#define EXPORT_INTERVAL 100                 // export after N bars
+
+// buffer storing features before export
+RegimeFeature g_feature_buffer[EXPORT_INTERVAL];
+int           g_feature_index = 0;          // current buffer index
+datetime      g_last_bar_time = 0;          // time of last processed bar
+
+//+------------------------------------------------------------------+
 //| Expert initialization function                                   |
 //+------------------------------------------------------------------+
 int OnInit()
   {
-   // TODO: initialization logic
+   //--- reset counters on EA initialization
+   g_feature_index = 0;
+   g_last_bar_time = 0;
    return(INIT_SUCCEEDED);
   }
 
@@ -21,7 +33,14 @@ int OnInit()
 //+------------------------------------------------------------------+
 void OnDeinit(const int reason)
   {
-   // TODO: cleanup logic
+   //--- export any remaining features on shutdown
+   if(g_feature_index>0)
+     {
+      ArrayResize(g_feature_buffer,g_feature_index);
+      ExportToCSV(g_feature_buffer,"data\\exported_features.csv");
+      ArrayResize(g_feature_buffer,EXPORT_INTERVAL);
+      g_feature_index = 0;
+     }
   }
 
 //+------------------------------------------------------------------+
@@ -29,7 +48,27 @@ void OnDeinit(const int reason)
 //+------------------------------------------------------------------+
 void OnTick()
   {
-   // TODO: main regime detection workflow
+   //--- process once per new completed bar
+   datetime bar_time = iTime(_Symbol,_Period,0);
+   if(bar_time==g_last_bar_time)
+      return;                       // exit until new bar is formed
+
+   g_last_bar_time = bar_time;
+
+   //--- fill feature struct using closed bar (shift=1)
+   RegimeFeature feature;
+   ProcessBar(1,feature);
+
+   //--- store in circular buffer
+   g_feature_buffer[g_feature_index] = feature;
+   g_feature_index++;
+
+   //--- export periodically
+   if(g_feature_index>=EXPORT_INTERVAL)
+     {
+      ExportToCSV(g_feature_buffer,"data\\exported_features.csv");
+      g_feature_index = 0;
+     }
   }
 
 //+------------------------------------------------------------------+
@@ -38,11 +77,36 @@ void OnTick()
 //|         feature - struct to populate with values                 |
 //| output: none                                                     |
 //+------------------------------------------------------------------+
-void ProcessBar(const int shift, RegimeFeature &feature);
+void ProcessBar(const int shift, RegimeFeature &feature)
+  {
+   //--- reset all fields before calculation
+   ResetRegimeFeature(feature);
+
+   //--- gather required history arrays
+   MqlRates rates[];
+   ArraySetAsSeries(rates,true);
+   CopyRates(_Symbol,_Period,shift,50,rates);
+
+   long volumes[];
+   ArraySetAsSeries(volumes,true);
+   CopyTickVolume(_Symbol,_Period,shift,50,volumes);
+
+   //--- calculate selected example features
+   feature.bos          = DetectBOS(rates,shift);
+   feature.sweep        = DetectSweep(rates,shift);
+   feature.volume_spike = DetectVolumeSpike(volumes,shift);
+
+   //--- other fields would be filled here in a full implementation
+  }
 
 //+------------------------------------------------------------------+
 //| Export collected features after validation                       |
 //| input:  feature - calculated feature struct                      |
 //| output: none                                                     |
 //+------------------------------------------------------------------+
-void ExportCurrentFeature(const RegimeFeature &feature);
+void ExportCurrentFeature(const RegimeFeature &feature)
+  {
+   RegimeFeature arr[1];
+   arr[0]=feature;
+   ExportToCSV(arr,"data\\exported_features.csv");
+  }
