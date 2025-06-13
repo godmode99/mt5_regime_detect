@@ -59,23 +59,23 @@ struct RegimeFeature
 //+------------------------------------------------------------------+
 void ResetRegimeFeature(RegimeFeature &feature)
   {
-   //--- clear all boolean flags
-   feature.bos              = false;           // Break of Structure
-   feature.range_compression= false;           // Compression/expansion state
-   feature.volume_spike     = false;           // Volume spike confirmation
-   feature.divergent        = false;           // Volume divergence
-   feature.sweep            = false;           // Liquidity sweep detected
-   feature.ob_retest        = false;           // Order block retest flag
-   feature.news_flag        = false;           // News event flag
+   //--- clear boolean fields
+   feature.bos              = false;           // reset Break of Structure flag
+   feature.range_compression= false;           // reset compression/expansion flag
+   feature.volume_spike     = false;           // reset volume spike confirmation
+   feature.divergent        = false;           // reset volume divergence flag
+   feature.sweep            = false;           // reset liquidity sweep flag
+   feature.ob_retest        = false;           // reset order block retest flag
+   feature.news_flag        = false;           // reset news event indicator
 
-   //--- reset enumeration values
-   feature.trend_dir        = TREND_NONE;      // Unknown trend direction
-   feature.candle_strength  = STRENGTH_NONE;   // No candle momentum
-   feature.dir              = DIR_NONE;        // Candle direction
-   feature.session          = SESSION_UNKNOWN; // Market session context
+   //--- reset enumeration fields
+   feature.trend_dir        = TREND_NONE;      // reset trend direction
+   feature.candle_strength  = STRENGTH_NONE;   // reset candle momentum strength
+   feature.dir              = DIR_NONE;        // reset candle direction
+   feature.session          = SESSION_UNKNOWN; // reset market session
 
    //--- reset numeric fields
-   feature.mtf_signal       = 0;               // Multi time frame signal
+   feature.mtf_signal       = 0;               // reset multi time frame signal
   }
 
 //+------------------------------------------------------------------+
