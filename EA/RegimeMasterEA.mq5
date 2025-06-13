@@ -7,6 +7,7 @@
 #include "..\indicators\candle_momentum.mqh"  // Candle strength/direction tools
 #include "..\indicators\session_tools.mqh"    // Session and news utilities
 
+#include "..\indicators\mtf_signal.mqh"        // Multi time frame signal
 //+------------------------------------------------------------------+
 //| Constants and global storage                                     |
 //+------------------------------------------------------------------+
@@ -104,8 +105,12 @@ void ProcessBar(const int shift, RegimeFeature &feature)
    feature.candle_strength = GetCandleStrength(rates,shift); // candle momentum
    feature.session      = GetMarketSession(rates[shift].time); // session context
 
-   // TODO: fill remaining fields such as range_compression, divergent,
-   //       trend_dir, candle direction, news_flag and mtf_signal
+   feature.range_compression = DetectRangeCompression(rates,HISTORY_BARS); // detect sideway compression
+   feature.divergent        = DetectVolumeDivergence(volumes,rates,shift); // check volume divergence
+   feature.trend_dir        = GetTrendDirection(rates,HISTORY_BARS);       // overall trend direction
+   feature.dir              = GetCandleDirection(rates,shift);             // candle direction
+   feature.news_flag        = IsNewsEvent(rates[shift].time);              // flag news events
+   feature.mtf_signal       = GetMTFSignal(rates,HISTORY_BARS);            // multi time frame signal
   }
 
 //+------------------------------------------------------------------+
