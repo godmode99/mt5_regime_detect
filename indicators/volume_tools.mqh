@@ -58,4 +58,28 @@ bool DetectVolumeSpike(const long &volumes[],   // volume data
    return(volumes[bar] > avg_vol * threshold);
   }
 
+//+------------------------------------------------------------------+
+//| Detect volume spike from MqlRates series                         |
+//| input:  rates[] - array of price data containing tick_volume     |
+//|         bars    - number of bars to analyze                      |
+//| output: true if spike detected on the current bar                |
+//| usage:  DetectVolumeSpike(rates,bars)                            |
+//+------------------------------------------------------------------+
+bool DetectVolumeSpike(const MqlRates rates[], const int bars)
+  {
+   //--- validate history length
+   if(bars<=0 || ArraySize(rates)<=bars)
+      return(false);
+
+   //--- build temporary volume array from rates
+   long volumes[];
+   ArraySetAsSeries(volumes,true);
+   ArrayResize(volumes,bars+1);
+   for(int i=0;i<=bars && i<ArraySize(rates);i++)
+      volumes[i]=rates[i].tick_volume;
+
+   //--- delegate to main volume spike logic
+   return(DetectVolumeSpike(volumes,0,1.5));
+  }
+
 #endif // VOLUME_TOOLS_MQH
