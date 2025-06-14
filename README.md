@@ -33,6 +33,8 @@
 ## 🛠 **Setup in MetaTrader 5**
 
 Place the entire `EA/` directory and the `indicators/` folder inside your terminal's `MQL5/Experts` directory.
+Both folders must sit side by side inside `MQL5/Experts` so that any `..\\EA\\` and
+`..\\indicators\\` includes resolve correctly when compiling.
 
 **Important:** All source files in this repository are written for **MQL5** and must be compiled with **MetaEditor&nbsp;5** that ships with MetaTrader&nbsp;5. Attempting to use the MetaTrader&nbsp;4 environment will lead to compiler errors because the API is incompatible.
 
