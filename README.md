@@ -51,7 +51,7 @@ mt5_regime_detect/
 │   ├── data_dictionary.md           # อธิบาย field/format
 │   └── logic_note.md
 ├── .gitignore
-├── requirements.txt                 # สำหรับ tooling/python/automation เพิ่มเติม
+├── requirements.txt                 # Python deps (pandas, numpy, pytest) สำหรับ automation/testing
 └── LICENSE
 🏗 Key Feature Fields (RegimeFeature struct)
 ทุก field ใน struct จะ auto-calc/logic-only, ไม่ manual (strict standard, no “feeling”)
