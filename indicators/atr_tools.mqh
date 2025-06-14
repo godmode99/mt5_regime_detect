@@ -7,7 +7,7 @@
 //|         period  - number of bars for ATR calculation             |
 //| output: ATR value                                                |
 //+------------------------------------------------------------------+
-double CalcATR(const MqlRates rates[], const int period)
+double CalcATR(const MqlRates &rates[], const int period)
   {
    if(ArraySize(rates)<=period)
       return(0.0);
@@ -32,7 +32,7 @@ double CalcATR(const MqlRates rates[], const int period)
 //|         period  - bars for calculation                            |
 //| output: standard deviation                                       |
 //+------------------------------------------------------------------+
-double CalcStdDev(const MqlRates rates[], const int period)
+double CalcStdDev(const MqlRates &rates[], const int period)
   {
    if(ArraySize(rates)<=period)
       return(0.0);
