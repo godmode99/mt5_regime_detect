@@ -34,6 +34,10 @@
 
 Place the entire `EA/` directory and the `indicators/` folder inside your terminal's `MQL5/Experts` directory.
 
+**Important:** All source files in this repository are written for **MQL5** and must be compiled with **MetaEditor&nbsp;5** that ships with MetaTrader&nbsp;5. Attempting to use the MetaTrader&nbsp;4 environment will lead to compiler errors because the API is incompatible.
+
+Common symptoms of compiling in the wrong environment include messages such as `CTrade` not found or "function must have body" for event handlers. Ensure you open the project with MetaEditor&nbsp;5 before building.
+
 ```plaintext
 MQL5/Experts/
 ├── EA/
