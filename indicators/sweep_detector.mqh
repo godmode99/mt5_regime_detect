@@ -110,4 +110,61 @@ bool DetectSweep(const double &high[],   // high price series
    return(upper_wick > limit || lower_wick > limit);
   }
 
+#ifdef SWEEP_DETECTOR_OVERLAY_INDICATOR
+
+#property indicator_chart_window
+#property indicator_buffers 0
+
+input color InpSweepColor      = clrDeepSkyBlue;   // vertical line color
+input ENUM_ARROW_SYMBOL InpSweepSymbol = SYMBOL_THINVERT; // marker symbol
+input double InpYOffset       = 0.0;               // vertical offset for marker
+
+int OnInit()
+  {
+   return(INIT_SUCCEEDED);
+  }
+
+int OnCalculate(const int rates_total,
+                const int prev_calculated,
+                const datetime &time[],
+                const double &open[],
+                const double &high[],
+                const double &low[],
+                const double &close[],
+                const long &tick_volume[],
+                const long &volume[],
+                const int &spread[])
+  {
+   int start=(prev_calculated==0)?0:prev_calculated-1;
+   for(int bar=start; bar<rates_total-1; bar++)
+     {
+      double atr = high[bar]-low[bar];
+      double upper = high[bar]-close[bar];
+      double lower = close[bar]-low[bar];
+      double limit = atr*0.5;
+      if(upper>limit || lower>limit)
+        {
+         string line=StringFormat("sweep_vline_%d",bar);
+         if(ObjectFind(0,line)<0)
+            ObjectCreate(0,line,OBJ_VLINE,0,time[bar],0);
+         ObjectSetInteger(0,line,OBJPROP_COLOR,InpSweepColor);
+         ObjectSetInteger(0,line,OBJPROP_WIDTH,1);
+         double pct = (atr>0.0)?MathMax(upper,lower)/atr*100.0:0.0;
+         string tip = StringFormat("wick %.1f%% / ATR %.5f",pct,atr);
+         ObjectSetString(0,line,OBJPROP_TOOLTIP,tip);
+
+         string mark=StringFormat("sweep_mark_%d",bar);
+         if(ObjectFind(0,mark)<0)
+            ObjectCreate(0,mark,OBJ_ARROW,0,time[bar],high[bar]+InpYOffset);
+         ObjectSetInteger(0,mark,OBJPROP_ARROWCODE,InpSweepSymbol);
+         ObjectSetInteger(0,mark,OBJPROP_COLOR,InpSweepColor);
+         ObjectSetDouble(0,mark,OBJPROP_PRICE,high[bar]+InpYOffset);
+         ObjectSetString(0,mark,OBJPROP_TOOLTIP,tip);
+        }
+     }
+   return(rates_total);
+  }
+
+#endif // SWEEP_DETECTOR_OVERLAY_INDICATOR
+
 #endif // SWEEP_DETECTOR_MQH
