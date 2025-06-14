@@ -55,6 +55,7 @@ mt5_regime_detect/
 │   ├── mtf_signal_display.mqh        # overlay bitmask from MTF signal (define MTF_SIGNAL_DISPLAY_INDICATOR)
 │   ├── regime_display.mqh            # show RegimeType label on chart (define REGIME_DISPLAY_INDICATOR)
 │   └── regime_classifier.mqh        # classify market regime
+│   # indicator modules now include "..\\EA\\features_struct.mqh" for shared enums
 ├── data/
 │   ├── exported_features.csv        # ไฟล์ export dataset
 ├── test/

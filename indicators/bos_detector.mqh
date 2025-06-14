@@ -1,6 +1,8 @@
 #ifndef BOS_DETECTOR_MQH
 #define BOS_DETECTOR_MQH
 
+#include "..\\EA\\features_struct.mqh"
+
 //+------------------------------------------------------------------+
 //| Return true if Break of Structure detected on given bar          |
 //| input:  rates[] - array of price data                             |

@@ -1,6 +1,8 @@
 #ifndef CANDLE_MOMENTUM_MQH
 #define CANDLE_MOMENTUM_MQH
 
+#include "..\\EA\\features_struct.mqh"
+
 //+------------------------------------------------------------------+
 //| Calculate candle momentum strength                               |
 //| input:  rates[] - price series                                    |
