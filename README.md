@@ -50,6 +50,7 @@ mt5_regime_detect/
 │   ├── ma_slope.mqh                 # moving average slope + overlay display (define MA_SLOPE_DISPLAY_INDICATOR)
 │   ├── rsi_tools.mqh                # RSI indicator
 │   ├── rsi_display.mqh           # subwindow RSI indicator with levels (define RSI_DISPLAY_INDICATOR)
+│   ├── mtf_signal_display.mqh        # overlay bitmask from MTF signal (define MTF_SIGNAL_DISPLAY_INDICATOR)
 │   └── regime_classifier.mqh        # classify market regime
 ├── data/
 │   ├── exported_features.csv        # ไฟล์ export dataset
