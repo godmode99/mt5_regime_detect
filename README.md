@@ -44,6 +44,7 @@ mt5_regime_detect/
 │   ├── ob_retest.mqh                # logic OB retest/trap + overlay rectangle highlight (width/color adjustable)
 │   ├── candle_momentum.mqh          # logic candle strength/direction + overlay icons (define CANDLE_MOMENTUM_OVERLAY_INDICATOR)
 │   ├── session_tools.mqh            # logic session/context
+│   ├── session_display.mqh          # overlay session zones + news icon (define SESSION_DISPLAY_INDICATOR)
 │   ├── atr_tools.mqh                # ATR & StdDev calculations + overlay indicator
 │   ├── ma_slope.mqh                 # moving average slope
 │   ├── rsi_tools.mqh                # RSI indicator
