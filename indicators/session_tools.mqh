@@ -1,6 +1,8 @@
 #ifndef SESSION_TOOLS_MQH
 #define SESSION_TOOLS_MQH
 
+#include "..\\EA\\features_struct.mqh"
+
 //+------------------------------------------------------------------+
 //| Determine current market session from time                       |
 //| input:  time - timestamp to evaluate                              |

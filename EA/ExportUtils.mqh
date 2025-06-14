@@ -3,6 +3,7 @@
 
 #include <Files\Csv.mqh>
 #include <stdlib.mqh>
+#include "features_struct.mqh"
 
 //+------------------------------------------------------------------+
 //| Export RegimeFeature data to CSV file                            |

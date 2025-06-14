@@ -3,6 +3,7 @@
 
 #include "bos_detector.mqh"
 #include "volume_tools.mqh"
+#include "..\\EA\\features_struct.mqh"
 
 //+------------------------------------------------------------------+
 //| Calculate aggregated multi time frame signal                     |
