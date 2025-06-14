@@ -37,7 +37,7 @@ mt5_regime_detect/
 │   ├── features_struct.mqh          # struct RegimeFeature, type ต่างๆ
 │   └── ExportUtils.mqh              # function ช่วย export csv/json, log
 ├── indicators/
-│   ├── bos_detector.mqh             # logic หา BOS
+│   ├── bos_detector.mqh             # logic หา BOS + overlay lines/arrows
 │   ├── sweep_detector.mqh           # logic sweep
 │   ├── volume_tools.mqh             # logic volume spike/divergent
 │   ├── ob_retest.mqh                # logic OB retest/trap

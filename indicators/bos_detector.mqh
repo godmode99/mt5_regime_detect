@@ -115,4 +115,102 @@ TrendDirection GetTrendDirection(const MqlRates rates[], const int bars)
    return(TREND_NONE);
   }
 
+#ifdef BOS_OVERLAY_INDICATOR
+
+#property indicator_chart_window
+#property indicator_buffers 0
+#property indicator_plots   0
+
+input int   InpBOSWindow      = 3;           // lookback bars for swings
+input color InpSwingColor     = clrSilver;   // color for swing lines
+input color InpArrowUpColor   = clrLime;     // color for BOS up arrow
+input color InpArrowDownColor = clrRed;      // color for BOS down arrow
+input int   InpArrowUpCode    = 233;         // arrow symbol for BOS up
+input int   InpArrowDownCode  = 234;         // arrow symbol for BOS down
+
+//+------------------------------------------------------------------+
+//| Helper to draw swing lines                                       |
+//+------------------------------------------------------------------+
+void DrawSwingLines(const string prefix,const datetime t,const double hi,const double lo)
+  {
+   string name_hi=prefix+"_hi"+IntegerToString((int)t);
+   string name_lo=prefix+"_lo"+IntegerToString((int)t);
+   if(ObjectFind(0,name_hi)<0)
+     {
+      ObjectCreate(0,name_hi,OBJ_HLINE,0,t,hi);
+      ObjectSetInteger(0,name_hi,OBJPROP_COLOR,InpSwingColor);
+     }
+   if(ObjectFind(0,name_lo)<0)
+     {
+      ObjectCreate(0,name_lo,OBJ_HLINE,0,t,lo);
+      ObjectSetInteger(0,name_lo,OBJPROP_COLOR,InpSwingColor);
+     }
+  }
+
+//+------------------------------------------------------------------+
+//| Helper to draw BOS arrow                                         |
+//+------------------------------------------------------------------+
+void DrawBOSArrow(const string prefix,const datetime t,const double price,const bool up)
+  {
+   string name=prefix+"_arrow"+IntegerToString((int)t);
+   if(ObjectFind(0,name)<0)
+     {
+      ObjectCreate(0,name,OBJ_ARROW,0,t,price);
+      ObjectSetInteger(0,name,OBJPROP_COLOR,up?InpArrowUpColor:InpArrowDownColor);
+      ObjectSetInteger(0,name,OBJPROP_ARROWCODE,up?InpArrowUpCode:InpArrowDownCode);
+     }
+  }
+
+int OnInit()
+  {
+   return(INIT_SUCCEEDED);
+  }
+
+int OnCalculate(const int rates_total,
+                const int prev_calculated,
+                const datetime &time[],
+                const double &open[],
+                const double &high[],
+                const double &low[],
+                const double &close[],
+                const long &tick_volume[],
+                const long &volume[],
+                const int &spread[])
+  {
+   int start=prev_calculated==0 ? InpBOSWindow : prev_calculated-1;
+   for(int i=start;i<rates_total-InpBOSWindow;i++)
+     {
+      double prev_high=high[i+1];
+      double prev_low =low[i+1];
+      for(int j=i+2;j<=i+InpBOSWindow && j<rates_total;j++)
+        {
+         if(high[j]>prev_high) prev_high=high[j];
+         if(low[j] <prev_low)  prev_low =low[j];
+        }
+
+      bool bos_up   = high[i] > prev_high;
+      bool bos_down = low[i]  < prev_low;
+
+      string prefix="bos"+IntegerToString(i);
+      DrawSwingLines(prefix,time[i],prev_high,prev_low);
+      if(bos_up)
+         DrawBOSArrow(prefix,time[i],high[i],true);
+      if(bos_down)
+         DrawBOSArrow(prefix,time[i],low[i],false);
+     }
+   return(rates_total);
+  }
+
+void OnDeinit(const int reason)
+  {
+   for(int i=ObjectsTotal()-1;i>=0;i--)
+     {
+      string name=ObjectName(i);
+      if(StringFind(name,"bos")==0)
+         ObjectDelete(0,name);
+     }
+  }
+
+#endif // BOS_OVERLAY_INDICATOR
+
 #endif // BOS_DETECTOR_MQH
