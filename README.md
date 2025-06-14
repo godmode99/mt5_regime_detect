@@ -41,7 +41,7 @@ mt5_regime_detect/
 │   ├── sweep_detector.mqh           # logic sweep
 │   ├── volume_tools.mqh             # logic volume spike/divergent
 │   ├── volume_display.mqh           # subwindow volume chart with spike/divergence highlight
-│   ├── ob_retest.mqh                # logic OB retest/trap
+│   ├── ob_retest.mqh                # logic OB retest/trap + overlay rectangle highlight (width/color adjustable)
 │   ├── candle_momentum.mqh          # logic candle strength/direction
 │   ├── session_tools.mqh            # logic session/context
 │   ├── atr_tools.mqh                # ATR & StdDev calculations + overlay indicator
