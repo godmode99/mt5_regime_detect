@@ -43,6 +43,9 @@ mt5_regime_detect/
 │   ├── ob_retest.mqh                # logic OB retest/trap
 │   ├── candle_momentum.mqh          # logic candle strength/direction
 │   ├── session_tools.mqh            # logic session/context
+│   ├── atr_tools.mqh                # ATR & StdDev calculations
+│   ├── ma_slope.mqh                 # moving average slope
+│   ├── rsi_tools.mqh                # RSI indicator
 │   └── regime_classifier.mqh        # classify market regime
 ├── data/
 │   ├── exported_features.csv        # ไฟล์ export dataset
@@ -58,7 +61,7 @@ mt5_regime_detect/
 ทุก field ใน struct จะ auto-calc/logic-only, ไม่ manual (strict standard, no “feeling”)
 
 Layer	Field Name	Type	Description
-Meta    time,symbol,open,high,low,close,tick_volume datetime/string/num  Bar metadata from MqlRates
+Meta    time,symbol,open,high,low,close,tick_volume,atr,stddev,ma_slope,rsi datetime/string/num  Bar metadata + volatility metrics
 Structure/Trend	bos, trend_dir	bool/enum	Break of Structure, Trend direction
 Range/Volatility	range_compression	bool	Detect sideway compression/expansion
 Volume	volume_spike, divergent	bool	Volume confirm, trap/flip

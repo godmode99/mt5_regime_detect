@@ -58,6 +58,10 @@ struct RegimeFeature
    double         low;               // low price
    double         close;             // close price
    long           tick_volume;       // tick volume
+   double         atr;               // Average True Range
+   double         stddev;            // Price standard deviation
+   double         ma_slope;          // Moving average slope
+   double         rsi;               // Relative Strength Index
    bool           bos;                // Break of Structure flag
    TrendDirection trend_dir;          // Trend direction enumeration
    bool           range_compression;  // Sideway compression/expansion flag
@@ -86,8 +90,12 @@ void ResetRegimeFeature(RegimeFeature &feature)
    feature.open        = 0.0;
    feature.high        = 0.0;
    feature.low         = 0.0;
-   feature.close       = 0.0;
-   feature.tick_volume = 0;
+  feature.close       = 0.0;
+  feature.tick_volume = 0;
+  feature.atr         = 0.0;
+  feature.stddev      = 0.0;
+  feature.ma_slope    = 0.0;
+  feature.rsi         = 0.0;
    //--- clear boolean fields
    feature.bos              = false;           // reset Break of Structure flag
    feature.range_compression= false;           // reset compression/expansion flag
@@ -120,7 +128,7 @@ void FeatureToCSV(const RegimeFeature &feature,string &csvRow)
      Each boolean or enumeration is cast to int so the CSV contains
       only numeric values. Order of fields matches data_dictionary.md
       and ExportUtils.mqh:
-      time,symbol,open,high,low,close,tick_volume,
+      time,symbol,open,high,low,close,tick_volume,atr,stddev,ma_slope,rsi,
       bos,trend_dir,range_compression,volume_spike,divergent,
       sweep,ob_retest,candle_strength,dir,session,news_flag,mtf_signal,regime
       Example row: "1623495600,EURUSD,1.1000,1.1050,1.0980,1.1020,150,1,0,0,1,0,0,1,2,1,3,0,5,0".
@@ -133,6 +141,10 @@ void FeatureToCSV(const RegimeFeature &feature,string &csvRow)
             + DoubleToString(feature.low,_Digits)           + ","   // low price
             + DoubleToString(feature.close,_Digits)         + ","   // close price
             + IntegerToString((int)feature.tick_volume)     + ","   // tick volume
+            + DoubleToString(feature.atr,_Digits)           + ","   // ATR
+            + DoubleToString(feature.stddev,_Digits)        + ","   // StdDev
+            + DoubleToString(feature.ma_slope,_Digits)      + ","   // MA slope
+            + DoubleToString(feature.rsi,_Digits)           + ","   // RSI
             + IntegerToString((int)feature.bos)             + ","   // Break of Structure
             + IntegerToString((int)feature.trend_dir)       + ","   // Trend direction
             + IntegerToString((int)feature.range_compression)+ ","  // Range compression

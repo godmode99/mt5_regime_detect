@@ -5,6 +5,9 @@
 #include "..\\indicators\\sweep_detector.mqh"
 #include "..\\indicators\\mtf_signal.mqh"
 #include "..\\indicators\\mtf_tools.mqh"
+#include "..\\indicators\\atr_tools.mqh"
+#include "..\\indicators\\ma_slope.mqh"
+#include "..\\indicators\\rsi_tools.mqh"
 
 //+------------------------------------------------------------------+
 //| Helper assertion function                                        |
@@ -115,7 +118,45 @@ void TestGetMTFSignal()
    int expected = AggregateMTFSignal(htf, ltf, bars);
    int actual   = GetMTFSignal(rates, bars);
 
-   AssertEqual(true, expected==actual, "GetMTFSignal - cross timeframe signal");
+  AssertEqual(true, expected==actual, "GetMTFSignal - cross timeframe signal");
+ }
+
+//+------------------------------------------------------------------+
+//| Test CalcATR and CalcStdDev                                      |
+//+------------------------------------------------------------------+
+void TestATRStdDev()
+  {
+   MqlRates r[4];
+   ArraySetAsSeries(r,true);
+   r[0].high=1.20; r[0].low=1.10; r[0].close=1.15;
+   r[1].high=1.18; r[1].low=1.12; r[1].close=1.14;
+   r[2].high=1.19; r[2].low=1.11; r[2].close=1.13;
+   r[3].high=1.18; r[3].low=1.10; r[3].close=1.12;
+   double atr = CalcATR(r,2);
+   double stddev = CalcStdDev(r,3);
+   bool atr_ok = MathAbs(atr-0.08)<0.0001;
+   bool std_ok = MathAbs(stddev-0.011547)<0.001;
+   AssertEqual(true, atr_ok, "CalcATR basic");
+   AssertEqual(true, std_ok, "CalcStdDev basic");
+  }
+
+//+------------------------------------------------------------------+
+//| Test GetMASlope and GetRSI                                       |
+//+------------------------------------------------------------------+
+void TestMASlopeRSI()
+  {
+   MqlRates r[5];
+   ArraySetAsSeries(r,true);
+   r[0].close=12; r[1].close=11; r[2].close=10; r[3].close=9; r[4].close=8;
+   double slope = GetMASlope(r,2);
+   bool slope_ok = MathAbs(slope-2.0)<0.0001;
+   MqlRates rsiRates[5];
+   ArraySetAsSeries(rsiRates,true);
+   rsiRates[0].close=1.2; rsiRates[1].close=1.1; rsiRates[2].close=1.0; rsiRates[3].close=0.9; rsiRates[4].close=0.8;
+   double rsi = GetRSI(rsiRates,3);
+   bool rsi_ok = MathAbs(rsi-100.0)<0.1;
+   AssertEqual(true, slope_ok, "GetMASlope positive");
+   AssertEqual(true, rsi_ok, "GetRSI uptrend");
   }
 
 //+------------------------------------------------------------------+
@@ -128,6 +169,8 @@ int OnStart()
   TestDetectVolumeSpike();
   TestDetectSweep();
   TestGetMTFSignal();
+  TestATRStdDev();
+  TestMASlopeRSI();
   return(0);
   }
 
