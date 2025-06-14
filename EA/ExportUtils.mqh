@@ -55,9 +55,10 @@ void ExportFeatureJSON(const RegimeFeature &feature)
                            (int)feature.news_flag,
                            feature.mtf_signal,
                            (int)feature.regime);
-   int handle=FileOpen("data\\exported_features.json",FILE_WRITE|FILE_TXT|FILE_ANSI|FILE_APPEND);
+   int handle=FileOpen("data\\exported_features.json",FILE_READ|FILE_WRITE|FILE_TXT|FILE_ANSI);
    if(handle!=INVALID_HANDLE)
      {
+      FileSeek(handle,0,SEEK_END);
       FileWrite(handle,json);
       FileClose(handle);
      }

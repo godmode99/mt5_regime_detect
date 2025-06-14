@@ -21,6 +21,7 @@
 
     - Export dataset ทุกฟีเจอร์ (field ครบ) ไว้ใน `data/exported_features.csv`
       โดยไฟล์จะถูกเปิดแบบ append เพื่อไม่ลบทับข้อมูลเดิม
+    - JSON export จะบันทึกลง `data/exported_features.json` แบบต่อท้ายไฟล์เดิมเช่นกัน
     - รองรับ feed ไป GPT/ML/Automation ภายนอก
     - มี `control_panel.mqh` ให้ดูค่าฟีเจอร์ล่าสุดและกด toggle export ON/OFF
 
