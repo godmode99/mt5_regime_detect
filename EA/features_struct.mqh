@@ -38,6 +38,13 @@ enum MarketSession
 //+------------------------------------------------------------------+
 struct RegimeFeature
   {
+   datetime       time;              // bar time
+   string         symbol;            // trading symbol
+   double         open;              // open price
+   double         high;              // high price
+   double         low;               // low price
+   double         close;             // close price
+   long           tick_volume;       // tick volume
    bool           bos;                // Break of Structure flag
    TrendDirection trend_dir;          // Trend direction enumeration
    bool           range_compression;  // Sideway compression/expansion flag
@@ -59,6 +66,14 @@ struct RegimeFeature
 //+------------------------------------------------------------------+
 void ResetRegimeFeature(RegimeFeature &feature)
   {
+   //--- reset time and price fields
+   feature.time        = 0;
+   feature.symbol      = "";
+   feature.open        = 0.0;
+   feature.high        = 0.0;
+   feature.low         = 0.0;
+   feature.close       = 0.0;
+   feature.tick_volume = 0;
    //--- clear boolean fields
    feature.bos              = false;           // reset Break of Structure flag
    feature.range_compression= false;           // reset compression/expansion flag
@@ -87,26 +102,34 @@ void FeatureToCSV(const RegimeFeature &feature,string &csvRow)
   {
    /*
       Serialize all struct fields into a comma separated string.
-      Each boolean or enumeration is cast to int so the CSV contains
+     Each boolean or enumeration is cast to int so the CSV contains
       only numeric values. Order of fields matches data_dictionary.md
       and ExportUtils.mqh:
+      time,symbol,open,high,low,close,tick_volume,
       bos,trend_dir,range_compression,volume_spike,divergent,
       sweep,ob_retest,candle_strength,dir,session,news_flag,mtf_signal
-      Example row: "1,0,0,1,0,0,1,2,1,3,0,5".
+      Example row: "1623495600,EURUSD,1.1000,1.1050,1.0980,1.1020,150,1,0,0,1,0,0,1,2,1,3,0,5".
    */
 
-   csvRow  = IntegerToString((int)feature.bos)              + ","  // Break of Structure
-            + IntegerToString((int)feature.trend_dir)        + ","  // Trend direction
-            + IntegerToString((int)feature.range_compression)+ ","  // Range compression flag
-            + IntegerToString((int)feature.volume_spike)     + ","  // Volume spike confirmation
-            + IntegerToString((int)feature.divergent)        + ","  // Volume divergence
-            + IntegerToString((int)feature.sweep)            + ","  // Liquidity sweep
-            + IntegerToString((int)feature.ob_retest)        + ","  // Order Block retest
-            + IntegerToString((int)feature.candle_strength)  + ","  // Candle momentum strength
-            + IntegerToString((int)feature.dir)              + ","  // Candle direction
-            + IntegerToString((int)feature.session)          + ","  // Market session
-            + IntegerToString((int)feature.news_flag)        + ","  // News event flag
-            + IntegerToString(feature.mtf_signal);                 // Multi time frame signal
+   csvRow  = IntegerToString((int)feature.time)             + ","   // bar time
+            + feature.symbol                                + ","   // trading symbol
+            + DoubleToString(feature.open,_Digits)          + ","   // open price
+            + DoubleToString(feature.high,_Digits)          + ","   // high price
+            + DoubleToString(feature.low,_Digits)           + ","   // low price
+            + DoubleToString(feature.close,_Digits)         + ","   // close price
+            + IntegerToString((int)feature.tick_volume)     + ","   // tick volume
+            + IntegerToString((int)feature.bos)             + ","   // Break of Structure
+            + IntegerToString((int)feature.trend_dir)       + ","   // Trend direction
+            + IntegerToString((int)feature.range_compression)+ ","  // Range compression
+            + IntegerToString((int)feature.volume_spike)    + ","   // Volume spike
+            + IntegerToString((int)feature.divergent)       + ","   // Volume divergence
+            + IntegerToString((int)feature.sweep)           + ","   // Liquidity sweep
+            + IntegerToString((int)feature.ob_retest)       + ","   // Order Block retest
+            + IntegerToString((int)feature.candle_strength) + ","   // Candle momentum
+            + IntegerToString((int)feature.dir)             + ","   // Candle direction
+            + IntegerToString((int)feature.session)         + ","   // Market session
+            + IntegerToString((int)feature.news_flag)       + ","   // News flag
+            + IntegerToString(feature.mtf_signal);               // MTF signal
   }
 
 #endif // FEATURES_STRUCT_MQH

@@ -96,7 +96,7 @@ void ProcessBar(const int shift, RegimeFeature &feature)
    //--- reset all fields before calculation
    ResetRegimeFeature(feature);
 
-   //--- gather required history arrays
+  //--- gather required history arrays
   MqlRates rates[];
   ArraySetAsSeries(rates,true);
   int copied_rates = CopyRates(_Symbol,_Period,shift,50,rates);
@@ -105,6 +105,15 @@ void ProcessBar(const int shift, RegimeFeature &feature)
      PrintFormat("CopyRates failed for %s %s shift %d",_Symbol,_Period,shift);
      return;
     }
+
+  //--- basic bar info
+  feature.time        = rates[0].time;
+  feature.symbol      = _Symbol;
+  feature.open        = rates[0].open;
+  feature.high        = rates[0].high;
+  feature.low         = rates[0].low;
+  feature.close       = rates[0].close;
+  feature.tick_volume = rates[0].tick_volume;
 
   //--- gather multi-timeframe history used for aggregation
   MqlRates htf[];
