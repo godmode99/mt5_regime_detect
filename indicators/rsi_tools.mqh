@@ -7,7 +7,7 @@
 //|         period  - RSI period                                      |
 //| output: RSI value 0-100                                           |
 //+------------------------------------------------------------------+
-double GetRSI(const MqlRates rates[], const int period)
+double GetRSI(const MqlRates &rates[], const int period)
   {
    if(ArraySize(rates) <= period)
       return(50.0);

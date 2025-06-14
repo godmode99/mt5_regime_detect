@@ -7,7 +7,7 @@
 //|         period  - number of bars for MA calculation               |
 //| output: difference between current MA and previous period MA      |
 //+------------------------------------------------------------------+
-double GetMASlope(const MqlRates rates[], const int period)
+double GetMASlope(const MqlRates &rates[], const int period)
   {
    if(ArraySize(rates) <= period*2)
       return(0.0);

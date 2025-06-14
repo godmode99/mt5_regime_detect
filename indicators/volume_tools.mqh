@@ -19,7 +19,7 @@ bool DetectVolumeSpike(const long volumes[], const int shift)
 //|         shift     - bar index                                     |
 //| output: true if divergence found                                  |
 //+------------------------------------------------------------------+
-bool DetectVolumeDivergence(const long volumes[], const MqlRates prices[], const int shift)
+bool DetectVolumeDivergence(const long volumes[], const MqlRates &prices[], const int shift)
   {
    if(shift+1>=ArraySize(volumes) || shift+1>=ArraySize(prices))
       return(false);
@@ -65,7 +65,7 @@ bool DetectVolumeSpike(const long &volumes[],   // volume data
 //| output: true if spike detected on the current bar                |
 //| usage:  DetectVolumeSpike(rates,bars)                            |
 //+------------------------------------------------------------------+
-bool DetectVolumeSpike(const MqlRates rates[], const int bars)
+bool DetectVolumeSpike(const MqlRates &rates[], const int bars)
   {
    //--- validate history length
    if(bars<=0 || ArraySize(rates)<=bars)

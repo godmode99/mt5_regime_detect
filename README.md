@@ -150,6 +150,8 @@ Reference all structure/logic/rules/flow จากไฟล์นี้
 
 ทุกการ export, validate, integration — ให้ยึด logic+format ตามที่นิยามไว้ตรงนี้
 
+ใช้ parameter รูปแบบ `const MqlRates &rates[]` ในฟังก์ชัน indicator ให้เหมือนกันทุกไฟล์
+
 ถาม/Generate code อะไร — ให้ refer “README.md” repo นี้เป็น base context เสมอ
 
 🏆 Goal
