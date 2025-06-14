@@ -51,6 +51,7 @@ mt5_regime_detect/
 │   ├── rsi_tools.mqh                # RSI indicator
 │   ├── rsi_display.mqh           # subwindow RSI indicator with levels (define RSI_DISPLAY_INDICATOR)
 │   ├── mtf_signal_display.mqh        # overlay bitmask from MTF signal (define MTF_SIGNAL_DISPLAY_INDICATOR)
+│   ├── regime_display.mqh            # show RegimeType label on chart (define REGIME_DISPLAY_INDICATOR)
 │   └── regime_classifier.mqh        # classify market regime
 ├── data/
 │   ├── exported_features.csv        # ไฟล์ export dataset
