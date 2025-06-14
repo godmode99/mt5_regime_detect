@@ -9,6 +9,7 @@
 
 #include "..\indicators\mtf_signal.mqh"        // Multi time frame signal
 #include "..\indicators\mtf_tools.mqh"         // Aggregation helpers for MTF
+#include "..\indicators\regime_classifier.mqh" // Regime classification logic
 //+------------------------------------------------------------------+
 //| Constants and global storage                                     |
 //+------------------------------------------------------------------+
@@ -156,6 +157,7 @@ void ProcessBar(const int shift, RegimeFeature &feature)
    feature.dir              = GetCandleDirection(rates,0);                 // candle direction
    feature.news_flag        = IsNewsEvent(rates[shift].time);              // flag news events
    feature.mtf_signal       = AggregateMTFSignal(htf,ltf,HISTORY_BARS);    // multi time frame signal
+   feature.regime           = DetectRegime(feature);                       // classify regime
   }
 
 //+------------------------------------------------------------------+

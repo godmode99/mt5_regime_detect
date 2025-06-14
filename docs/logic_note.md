@@ -44,6 +44,22 @@ The final signal is a bit mask where multiple conditions may be active simultane
 
 Uses the built‑in economic calendar to detect high importance events within ±30 minutes of the bar time. Returns **true** when at least one such event is found for the symbol's base currency.
 
+### Regime Classification
+
+`DetectRegime` maps the calculated features to a `RegimeType` enum:
+
+| Regime | Rule |
+| --- | --- |
+| `REGIME_UPTREND` | `trend_dir` = TREND_UP and not `range_compression` |
+| `REGIME_DOWNTREND` | `trend_dir` = TREND_DOWN and not `range_compression` |
+| `REGIME_STABLE_RANGE` | `range_compression` = true and `volume_spike` = false |
+| `REGIME_VOLATILE_RANGE` | `range_compression` = true and `volume_spike` = true |
+| `REGIME_BREAKOUT` | `bos` = true and `sweep` = false |
+| `REGIME_TRAP` | `ob_retest` = true |
+| `REGIME_DRIFT` | no momentum, no volume spike and `trend_dir` = TREND_NONE |
+| `REGIME_CHAOS` | `bos`, `sweep` and `volume_spike` all true |
+| `REGIME_UNKNOWN` | none of the above conditions |
+
 ## EA Workflow
 
 1. **Initialization (`OnInit`)**
