@@ -66,6 +66,10 @@ void ExportFeatureJSON(const RegimeFeature &feature)
 //+------------------------------------------------------------------+
 bool ValidateFeature(const RegimeFeature &feature)
   {
+   if(feature.time<=0)
+      return(false);
+   if(StringLen(feature.symbol)==0)
+      return(false);
    if(feature.trend_dir < TREND_NONE || feature.trend_dir > TREND_DOWN)
       return(false);
    if(feature.candle_strength < STRENGTH_NONE || feature.candle_strength > STRENGTH_STRONG)
@@ -102,7 +106,7 @@ void ExportToCSV(RegimeFeature &features[], const string filename)
      FileSeek(handle,0,SEEK_END);
   else
      FileWrite(handle,
-               "bos,trend_dir,range_compression,volume_spike,divergent,"
+               "time,symbol,open,high,low,close,tick_volume,bos,trend_dir,range_compression,volume_spike,divergent,"
                "sweep,ob_retest,candle_strength,dir,session,news_flag,mtf_signal");
 
    //--- iterate over feature array and output each struct as CSV row
@@ -113,6 +117,13 @@ void ExportToCSV(RegimeFeature &features[], const string filename)
 
       // write all fields as integer values in the defined order
       FileWrite(handle,
+                (int)f.time,
+                f.symbol,
+                DoubleToString(f.open,_Digits),
+                DoubleToString(f.high,_Digits),
+                DoubleToString(f.low,_Digits),
+                DoubleToString(f.close,_Digits),
+                (int)f.tick_volume,
                 (int)f.bos,
                 (int)f.trend_dir,
                 (int)f.range_compression,

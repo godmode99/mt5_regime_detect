@@ -4,6 +4,13 @@ The table below defines every field exported from the `RegimeFeature` struct. Al
 
 | Field Name | Data Type | Description | Possible Values/Enum | Expected Range/Threshold | Example Value | Logic/Formula |
 | --- | --- | --- | --- | --- | --- | --- |
+| time | datetime | Bar time stamp | unix seconds | n/a | `1623495600` | `rates[0].time` value |
+| symbol | string | Trading symbol | e.g. `EURUSD` | n/a | `EURUSD` | `_Symbol` from MT5 |
+| open | double | Open price | n/a | n/a | `1.1000` | `rates[0].open` |
+| high | double | High price | n/a | n/a | `1.1050` | `rates[0].high` |
+| low | double | Low price | n/a | n/a | `1.0980` | `rates[0].low` |
+| close | double | Close price | n/a | n/a | `1.1020` | `rates[0].close` |
+| tick_volume | long | Tick volume | n/a | n/a | `150` | `rates[0].tick_volume` |
 | bos | bool | Break of Structure flag | `0` = false, `1` = true | n/a | `1` | `DetectBOS` compares current high/low with recent swings and returns true if either is broken. |
 | trend_dir | enum | Trend direction | `0`=TREND_NONE, `1`=TREND_UP, `2`=TREND_DOWN | n/a | `1` | `GetTrendDirection` checks the close price change over a lookback window. |
 | range_compression | bool | Sideway range compression detection | `0` = false, `1` = true | current range < 50% of lookback range | `0` | `DetectRangeCompression` compares current bar range to the max/min range over the window. |
@@ -21,20 +28,21 @@ The table below defines every field exported from the `RegimeFeature` struct. Al
 
 ### JSON
 ```json
-{"bos":1,"trend_dir":0,"range_compression":0,"volume_spike":1,"divergent":0,"sweep":0,"ob_retest":1,"candle_strength":2,"dir":1,"session":3,"news_flag":0,"mtf_signal":5}
-{"bos":0,"trend_dir":1,"range_compression":1,"volume_spike":0,"divergent":0,"sweep":0,"ob_retest":0,"candle_strength":1,"dir":2,"session":1,"news_flag":0,"mtf_signal":3}
-{"bos":0,"trend_dir":2,"range_compression":0,"volume_spike":0,"divergent":1,"sweep":1,"ob_retest":0,"candle_strength":0,"dir":0,"session":2,"news_flag":1,"mtf_signal":2}
+{"time":1623495600,"symbol":"EURUSD","open":1.1000,"high":1.1050,"low":1.0980,"close":1.1020,"tick_volume":150,"bos":1,"trend_dir":0,"range_compression":0,"volume_spike":1,"divergent":0,"sweep":0,"ob_retest":1,"candle_strength":2,"dir":1,"session":3,"news_flag":0,"mtf_signal":5}
+{"time":1623495660,"symbol":"EURUSD","open":1.1020,"high":1.1060,"low":1.0990,"close":1.1030,"tick_volume":120,"bos":0,"trend_dir":1,"range_compression":1,"volume_spike":0,"divergent":0,"sweep":0,"ob_retest":0,"candle_strength":1,"dir":2,"session":1,"news_flag":0,"mtf_signal":3}
+{"time":1623495720,"symbol":"EURUSD","open":1.1030,"high":1.1070,"low":1.1000,"close":1.1010,"tick_volume":130,"bos":0,"trend_dir":2,"range_compression":0,"volume_spike":0,"divergent":1,"sweep":1,"ob_retest":0,"candle_strength":0,"dir":0,"session":2,"news_flag":1,"mtf_signal":2}
 ```
 
 ### CSV
 ```
-bos,trend_dir,range_compression,volume_spike,divergent,sweep,ob_retest,candle_strength,dir,session,news_flag,mtf_signal
-1,0,0,1,0,0,1,2,1,3,0,5
-0,1,1,0,0,0,0,1,2,1,0,3
-0,2,0,0,1,1,0,0,0,2,1,2
+time,symbol,open,high,low,close,tick_volume,bos,trend_dir,range_compression,volume_spike,divergent,sweep,ob_retest,candle_strength,dir,session,news_flag,mtf_signal
+1623495600,EURUSD,1.1000,1.1050,1.0980,1.1020,150,1,0,0,1,0,0,1,2,1,3,0,5
+1623495660,EURUSD,1.1020,1.1060,1.0990,1.1030,120,0,1,1,0,0,0,0,1,2,1,0,3
+1623495720,EURUSD,1.1030,1.1070,1.1000,1.1010,130,0,2,0,0,1,1,0,0,0,2,1,2
 ```
 
 ## Field Version/Change Log
 | Date | Field Name | Change Description |
 | --- | --- | --- |
 | 2025-06-13 | RegimeFeature struct | Initial implementation of all fields and indicator logic. |
+| 2025-06-14 | Added price metadata | Added time, symbol, OHLC and tick_volume fields. |

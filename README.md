@@ -57,6 +57,7 @@ mt5_regime_detect/
 ทุก field ใน struct จะ auto-calc/logic-only, ไม่ manual (strict standard, no “feeling”)
 
 Layer	Field Name	Type	Description
+Meta    time,symbol,open,high,low,close,tick_volume datetime/string/num  Bar metadata from MqlRates
 Structure/Trend	bos, trend_dir	bool/enum	Break of Structure, Trend direction
 Range/Volatility	range_compression	bool	Detect sideway compression/expansion
 Volume	volume_spike, divergent	bool	Volume confirm, trap/flip
