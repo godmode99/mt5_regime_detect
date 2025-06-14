@@ -33,6 +33,19 @@ enum MarketSession
    SESSION_US
   };
 
+enum RegimeType
+  {
+   REGIME_UPTREND = 0,
+   REGIME_DOWNTREND,
+   REGIME_STABLE_RANGE,
+   REGIME_VOLATILE_RANGE,
+   REGIME_BREAKOUT,
+   REGIME_TRAP,
+   REGIME_DRIFT,
+   REGIME_CHAOS,
+   REGIME_UNKNOWN
+  };
+
 //+------------------------------------------------------------------+
 //| Structure storing regime detection features                      |
 //+------------------------------------------------------------------+
@@ -55,8 +68,9 @@ struct RegimeFeature
    CandleStrength candle_strength;    // Candle momentum strength
    CandleDirection dir;               // Candle direction
    MarketSession  session;            // Market session context
-   bool           news_flag;          // News event flag
-   int            mtf_signal;         // Multi time frame cross-check signal
+  bool           news_flag;          // News event flag
+  int            mtf_signal;         // Multi time frame cross-check signal
+  RegimeType     regime;             // Classified regime type
   };
 
 //+------------------------------------------------------------------+
@@ -91,6 +105,7 @@ void ResetRegimeFeature(RegimeFeature &feature)
 
    //--- reset numeric fields
    feature.mtf_signal       = 0;               // reset multi time frame signal
+   feature.regime           = REGIME_UNKNOWN;  // reset regime classification
   }
 
 //+------------------------------------------------------------------+
@@ -107,8 +122,8 @@ void FeatureToCSV(const RegimeFeature &feature,string &csvRow)
       and ExportUtils.mqh:
       time,symbol,open,high,low,close,tick_volume,
       bos,trend_dir,range_compression,volume_spike,divergent,
-      sweep,ob_retest,candle_strength,dir,session,news_flag,mtf_signal
-      Example row: "1623495600,EURUSD,1.1000,1.1050,1.0980,1.1020,150,1,0,0,1,0,0,1,2,1,3,0,5".
+      sweep,ob_retest,candle_strength,dir,session,news_flag,mtf_signal,regime
+      Example row: "1623495600,EURUSD,1.1000,1.1050,1.0980,1.1020,150,1,0,0,1,0,0,1,2,1,3,0,5,0".
    */
 
    csvRow  = IntegerToString((int)feature.time)             + ","   // bar time
@@ -129,7 +144,8 @@ void FeatureToCSV(const RegimeFeature &feature,string &csvRow)
             + IntegerToString((int)feature.dir)             + ","   // Candle direction
             + IntegerToString((int)feature.session)         + ","   // Market session
             + IntegerToString((int)feature.news_flag)       + ","   // News flag
-            + IntegerToString(feature.mtf_signal);               // MTF signal
+            + IntegerToString(feature.mtf_signal)           + ","   // MTF signal
+            + IntegerToString((int)feature.regime);             // Regime type
   }
 
 #endif // FEATURES_STRUCT_MQH

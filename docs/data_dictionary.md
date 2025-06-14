@@ -23,22 +23,23 @@ The table below defines every field exported from the `RegimeFeature` struct. Al
 | session | enum | Market session context | `0`=SESSION_UNKNOWN, `1`=SESSION_ASIA, `2`=SESSION_EUROPE, `3`=SESSION_US | n/a | `3` | `GetMarketSession` derives the session from bar time hour. |
 | news_flag | bool | News event flag | `0` = false, `1` = true | n/a | `0` | `IsNewsEvent` placeholder to mark major economic news. |
 | mtf_signal | int | Multi time frame cross‑check signal | numeric code | n/a | `5` | Bitmask from H1 BOS, H1 trend, and M5 volume spike. |
+| regime | enum | Classified market regime | `0`=REGIME_UPTREND, `1`=REGIME_DOWNTREND, `2`=REGIME_STABLE_RANGE, `3`=REGIME_VOLATILE_RANGE, `4`=REGIME_BREAKOUT, `5`=REGIME_TRAP, `6`=REGIME_DRIFT, `7`=REGIME_CHAOS, `8`=REGIME_UNKNOWN | n/a | `0` | `DetectRegime` evaluation of other fields. |
 
 ## Sample Data
 
 ### JSON
 ```json
-{"time":1623495600,"symbol":"EURUSD","open":1.1000,"high":1.1050,"low":1.0980,"close":1.1020,"tick_volume":150,"bos":1,"trend_dir":0,"range_compression":0,"volume_spike":1,"divergent":0,"sweep":0,"ob_retest":1,"candle_strength":2,"dir":1,"session":3,"news_flag":0,"mtf_signal":5}
-{"time":1623495660,"symbol":"EURUSD","open":1.1020,"high":1.1060,"low":1.0990,"close":1.1030,"tick_volume":120,"bos":0,"trend_dir":1,"range_compression":1,"volume_spike":0,"divergent":0,"sweep":0,"ob_retest":0,"candle_strength":1,"dir":2,"session":1,"news_flag":0,"mtf_signal":3}
-{"time":1623495720,"symbol":"EURUSD","open":1.1030,"high":1.1070,"low":1.1000,"close":1.1010,"tick_volume":130,"bos":0,"trend_dir":2,"range_compression":0,"volume_spike":0,"divergent":1,"sweep":1,"ob_retest":0,"candle_strength":0,"dir":0,"session":2,"news_flag":1,"mtf_signal":2}
+{"time":1623495600,"symbol":"EURUSD","open":1.1000,"high":1.1050,"low":1.0980,"close":1.1020,"tick_volume":150,"bos":1,"trend_dir":0,"range_compression":0,"volume_spike":1,"divergent":0,"sweep":0,"ob_retest":1,"candle_strength":2,"dir":1,"session":3,"news_flag":0,"mtf_signal":5,"regime":0}
+{"time":1623495660,"symbol":"EURUSD","open":1.1020,"high":1.1060,"low":1.0990,"close":1.1030,"tick_volume":120,"bos":0,"trend_dir":1,"range_compression":1,"volume_spike":0,"divergent":0,"sweep":0,"ob_retest":0,"candle_strength":1,"dir":2,"session":1,"news_flag":0,"mtf_signal":3,"regime":2}
+{"time":1623495720,"symbol":"EURUSD","open":1.1030,"high":1.1070,"low":1.1000,"close":1.1010,"tick_volume":130,"bos":0,"trend_dir":2,"range_compression":0,"volume_spike":0,"divergent":1,"sweep":1,"ob_retest":0,"candle_strength":0,"dir":0,"session":2,"news_flag":1,"mtf_signal":2,"regime":8}
 ```
 
 ### CSV
 ```
-time,symbol,open,high,low,close,tick_volume,bos,trend_dir,range_compression,volume_spike,divergent,sweep,ob_retest,candle_strength,dir,session,news_flag,mtf_signal
-1623495600,EURUSD,1.1000,1.1050,1.0980,1.1020,150,1,0,0,1,0,0,1,2,1,3,0,5
-1623495660,EURUSD,1.1020,1.1060,1.0990,1.1030,120,0,1,1,0,0,0,0,1,2,1,0,3
-1623495720,EURUSD,1.1030,1.1070,1.1000,1.1010,130,0,2,0,0,1,1,0,0,0,2,1,2
+time,symbol,open,high,low,close,tick_volume,bos,trend_dir,range_compression,volume_spike,divergent,sweep,ob_retest,candle_strength,dir,session,news_flag,mtf_signal,regime
+1623495600,EURUSD,1.1000,1.1050,1.0980,1.1020,150,1,0,0,1,0,0,1,2,1,3,0,5,0
+1623495660,EURUSD,1.1020,1.1060,1.0990,1.1030,120,0,1,1,0,0,0,0,1,2,1,0,3,2
+1623495720,EURUSD,1.1030,1.1070,1.1000,1.1010,130,0,2,0,0,1,1,0,0,0,2,1,2,8
 ```
 
 ## Field Version/Change Log
@@ -46,3 +47,4 @@ time,symbol,open,high,low,close,tick_volume,bos,trend_dir,range_compression,volu
 | --- | --- | --- |
 | 2025-06-13 | RegimeFeature struct | Initial implementation of all fields and indicator logic. |
 | 2025-06-14 | Added price metadata | Added time, symbol, OHLC and tick_volume fields. |
+| 2025-06-15 | regime | Added regime classification field and DetectRegime logic. |

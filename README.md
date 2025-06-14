@@ -42,7 +42,8 @@ mt5_regime_detect/
 │   ├── volume_tools.mqh             # logic volume spike/divergent
 │   ├── ob_retest.mqh                # logic OB retest/trap
 │   ├── candle_momentum.mqh          # logic candle strength/direction
-│   └── session_tools.mqh            # logic session/context
+│   ├── session_tools.mqh            # logic session/context
+│   └── regime_classifier.mqh        # classify market regime
 ├── data/
 │   ├── exported_features.csv        # ไฟล์ export dataset
 ├── test/
@@ -66,7 +67,9 @@ OB Retest/Trap	ob_retest	bool	เจาะจงโซน trap/fake move
 Candle/Momentum	candle_strength, dir	enum	Momentum strength/direction
 Session/Context	session, news_flag	enum/bool	Market session/context/news flag
 Multi-TF	mtf_signal	dict/obj	Cross-check หลาย TF
+Classification  regime          enum    Result from DetectRegime
 
+DetectRegime evaluates features and sets `regime` (UPTREND,DOWNTREND,etc.)
 Data Dictionary, format, and logic—reference in /docs/data_dictionary.md
 
 🔁 Workflow Summary

@@ -40,7 +40,7 @@ void ExportFeatureCSV(const RegimeFeature &feature)
 //+------------------------------------------------------------------+
 void ExportFeatureJSON(const RegimeFeature &feature)
   {
-   string json=StringFormat("{\"bos\":%d,\"trend_dir\":%d,\"range_compression\":%d,\"volume_spike\":%d,\"divergent\":%d,\"sweep\":%d,\"ob_retest\":%d,\"candle_strength\":%d,\"dir\":%d,\"session\":%d,\"news_flag\":%d,\"mtf_signal\":%d}",
+   string json=StringFormat("{\"bos\":%d,\"trend_dir\":%d,\"range_compression\":%d,\"volume_spike\":%d,\"divergent\":%d,\"sweep\":%d,\"ob_retest\":%d,\"candle_strength\":%d,\"dir\":%d,\"session\":%d,\"news_flag\":%d,\"mtf_signal\":%d,\"regime\":%d}",
                            (int)feature.bos,
                            (int)feature.trend_dir,
                            (int)feature.range_compression,
@@ -52,7 +52,8 @@ void ExportFeatureJSON(const RegimeFeature &feature)
                            (int)feature.dir,
                            (int)feature.session,
                            (int)feature.news_flag,
-                           feature.mtf_signal);
+                           feature.mtf_signal,
+                           (int)feature.regime);
    int handle=FileOpen("data\\exported_features.json",FILE_WRITE|FILE_TXT|FILE_ANSI|FILE_APPEND);
    if(handle!=INVALID_HANDLE)
      {
@@ -76,10 +77,12 @@ bool ValidateFeature(const RegimeFeature &feature)
       return(false);
    if(feature.dir < DIR_NONE || feature.dir > DIR_BEAR)
       return(false);
-   if(feature.session < SESSION_UNKNOWN || feature.session > SESSION_US)
+  if(feature.session < SESSION_UNKNOWN || feature.session > SESSION_US)
+     return(false);
+   if(feature.regime < REGIME_UPTREND || feature.regime > REGIME_UNKNOWN)
       return(false);
-   return(true);
-  }
+  return(true);
+ }
 
 //+------------------------------------------------------------------+
 //| Export array of RegimeFeature structs to CSV file                |
@@ -90,7 +93,7 @@ bool ValidateFeature(const RegimeFeature &feature)
 //| The CSV format uses a header row followed by numeric values.     |
 //| Existing files are not overwritten. New rows are appended to the |
 //| end so historical data is preserved.                             |
-//| Sample row: "1,0,0,1,0,0,1,2,1,3,0,5"                            |
+//| Sample row: "1,0,0,1,0,0,1,2,1,3,0,5,0"                           |
 //+------------------------------------------------------------------+
 void ExportToCSV(RegimeFeature &features[], const string filename)
   {
@@ -105,9 +108,9 @@ void ExportToCSV(RegimeFeature &features[], const string filename)
   if(exists)
      FileSeek(handle,0,SEEK_END);
   else
-     FileWrite(handle,
+    FileWrite(handle,
                "time,symbol,open,high,low,close,tick_volume,bos,trend_dir,range_compression,volume_spike,divergent,"
-               "sweep,ob_retest,candle_strength,dir,session,news_flag,mtf_signal");
+               "sweep,ob_retest,candle_strength,dir,session,news_flag,mtf_signal,regime");
 
    //--- iterate over feature array and output each struct as CSV row
    int total = ArraySize(features);
@@ -135,7 +138,8 @@ void ExportToCSV(RegimeFeature &features[], const string filename)
                 (int)f.dir,
                 (int)f.session,
                 (int)f.news_flag,
-                f.mtf_signal);
+                f.mtf_signal,
+                (int)f.regime);
      }
 
    //--- close the file after writing all rows
