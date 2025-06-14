@@ -9,6 +9,7 @@
 #include "..\indicators\atr_tools.mqh"        // ATR and StdDev calculations
 #include "..\indicators\ma_slope.mqh"        // Moving average slope
 #include "..\indicators\rsi_tools.mqh"       // RSI indicator
+#include "control_panel.mqh"                    // chart control panel
 
 #include "..\indicators\mtf_signal.mqh"        // Multi time frame signal
 #include "..\indicators\mtf_tools.mqh"         // Aggregation helpers for MTF
@@ -34,6 +35,9 @@ int OnInit()
    g_last_bar_time = 0;
    //--- allocate dynamic feature buffer
    ArrayResize(g_feature_buffer,EXPORT_INTERVAL);
+   //--- initialize control panel and enable export by default
+   InitPanel();
+   g_export_enabled = true;
    return(INIT_SUCCEEDED);
   }
 
@@ -43,7 +47,7 @@ int OnInit()
 void OnDeinit(const int reason)
   {
    //--- export any remaining features on shutdown
-   if(g_feature_index>0)
+   if(g_export_enabled && g_feature_index>0)
      {
       ArrayResize(g_feature_buffer,g_feature_index);
       ExportToCSV(g_feature_buffer,"data\\exported_features.csv");
@@ -80,8 +84,11 @@ void OnTick()
       g_feature_buffer[g_feature_index] = feature;
       g_feature_index++;
 
+      if(shift==1)
+         UpdatePanel(feature);
+
       //--- export buffer to CSV when EXPORT_INTERVAL rows collected
-      if(g_feature_index>=EXPORT_INTERVAL)
+      if(g_export_enabled && g_feature_index>=EXPORT_INTERVAL)
         {
          ExportToCSV(g_feature_buffer,"data\\exported_features.csv");
          g_feature_index = 0;
@@ -186,6 +193,16 @@ void ExportCurrentFeature(const RegimeFeature &feature)
    RegimeFeature arr[1];
    arr[0]=feature;
    // delegate to ExportToCSV for single row export
-   ExportToCSV(arr,"data\\exported_features.csv");
+  if(g_export_enabled)
+     ExportToCSV(arr,"data\\exported_features.csv");
+  }
+
+//+------------------------------------------------------------------+
+//| Chart event handler - forwards events to control panel            |
+//+------------------------------------------------------------------+
+void OnChartEvent(const int id,const long &lparam,
+                  const double &dparam,const string &sparam)
+  {
+   PanelOnChartEvent(id,lparam,dparam,sparam);
   }
 

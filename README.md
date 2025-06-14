@@ -19,9 +19,10 @@
 
 2. **Data Export**
 
-   - Export dataset ทุกฟีเจอร์ (field ครบ) ไว้ใน `data/exported_features.csv`
-     โดยไฟล์จะถูกเปิดแบบ append เพื่อไม่ลบทับข้อมูลเดิม
-   - รองรับ feed ไป GPT/ML/Automation ภายนอก
+    - Export dataset ทุกฟีเจอร์ (field ครบ) ไว้ใน `data/exported_features.csv`
+      โดยไฟล์จะถูกเปิดแบบ append เพื่อไม่ลบทับข้อมูลเดิม
+    - รองรับ feed ไป GPT/ML/Automation ภายนอก
+    - มี `control_panel.mqh` ให้ดูค่าฟีเจอร์ล่าสุดและกด toggle export ON/OFF
 
 3. **Integration**
    - ต่อยอด integration (Python/API) สำหรับ process/monitor/automation เพิ่มเติม
@@ -35,6 +36,7 @@ mt5_regime_detect/
 ├── EA/
 │   ├── RegimeMasterEA.mq5           # EA หลัก รวม logic indicator/export
 │   ├── features_struct.mqh          # struct RegimeFeature, type ต่างๆ
+│   ├── control_panel.mqh           # on-chart panel + export toggle
 │   └── ExportUtils.mqh              # function ช่วย export csv/json, log
 ├── indicators/
 │   ├── bos_detector.mqh             # logic หา BOS + overlay เส้น/ลูกศร
@@ -91,6 +93,8 @@ EA รวบรวมทุก indicator/feature (import mqh ทุกตัว�
 Loop ทุก bar → Fill struct RegimeFeature
 
 Export dataset ตาม format (.csv/.json)
+
+ใช้ปุ่มใน `control_panel.mqh` บนกราฟเพื่อเปิด/ปิดการ export dataset
 
 (Optional) Feed dataset ไป GPT API/ML/Automation layer
 
