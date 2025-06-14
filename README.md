@@ -43,7 +43,7 @@ mt5_regime_detect/
 │   ├── ob_retest.mqh                # logic OB retest/trap
 │   ├── candle_momentum.mqh          # logic candle strength/direction
 │   ├── session_tools.mqh            # logic session/context
-│   ├── atr_tools.mqh                # ATR & StdDev calculations
+│   ├── atr_tools.mqh                # ATR & StdDev calculations + overlay indicator
 │   ├── ma_slope.mqh                 # moving average slope
 │   ├── rsi_tools.mqh                # RSI indicator
 │   └── regime_classifier.mqh        # classify market regime
