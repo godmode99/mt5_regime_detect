@@ -6,6 +6,9 @@
 #include "..\indicators\ob_retest.mqh"        // Order Block retest detector
 #include "..\indicators\candle_momentum.mqh"  // Candle strength/direction tools
 #include "..\indicators\session_tools.mqh"    // Session and news utilities
+#include "..\indicators\atr_tools.mqh"        // ATR and StdDev calculations
+#include "..\indicators\ma_slope.mqh"        // Moving average slope
+#include "..\indicators\rsi_tools.mqh"       // RSI indicator
 
 #include "..\indicators\mtf_signal.mqh"        // Multi time frame signal
 #include "..\indicators\mtf_tools.mqh"         // Aggregation helpers for MTF
@@ -142,6 +145,12 @@ void ProcessBar(const int shift, RegimeFeature &feature)
      PrintFormat("CopyTickVolume failed for shift %d",shift);
      return;
     }
+
+  //--- volatility and momentum indicators
+  feature.atr      = CalcATR(rates,14);
+  feature.stddev   = CalcStdDev(rates,14);
+  feature.ma_slope = GetMASlope(rates,10);
+  feature.rsi      = GetRSI(rates,14);
 
    //--- populate a few core fields using indicator modules
    feature.bos          = DetectBOS(rates,0);              // break of structure

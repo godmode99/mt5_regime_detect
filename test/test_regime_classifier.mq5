@@ -36,30 +36,36 @@ void TestDetectRegime()
    f.volume_spike=true;
    AssertEqual(REGIME_VOLATILE_RANGE,DetectRegime(f),"DetectRegime volatile range");
 
-   // breakout
-   ResetRegimeFeature(f);
-   f.bos=true;
-   f.sweep=false;
-   AssertEqual(REGIME_BREAKOUT,DetectRegime(f),"DetectRegime breakout");
+  // breakout
+  ResetRegimeFeature(f);
+  f.bos=true;
+  f.sweep=false;
+  f.ma_slope=1.0;
+  f.rsi=70;
+  AssertEqual(REGIME_BREAKOUT,DetectRegime(f),"DetectRegime breakout");
 
    // trap
    ResetRegimeFeature(f);
    f.ob_retest=true;
    AssertEqual(REGIME_TRAP,DetectRegime(f),"DetectRegime trap");
 
-   // drift
-   ResetRegimeFeature(f);
-   f.trend_dir=TREND_NONE;
-   f.candle_strength=STRENGTH_NONE;
-   f.volume_spike=false;
-   AssertEqual(REGIME_DRIFT,DetectRegime(f),"DetectRegime drift");
+  // drift
+  ResetRegimeFeature(f);
+  f.trend_dir=TREND_NONE;
+  f.candle_strength=STRENGTH_NONE;
+  f.volume_spike=false;
+  f.atr=0.0005;
+  f.stddev=0.002;
+  AssertEqual(REGIME_DRIFT,DetectRegime(f),"DetectRegime drift");
 
-   // chaos
-   ResetRegimeFeature(f);
-   f.bos=true;
-   f.sweep=true;
-   f.volume_spike=true;
-   AssertEqual(REGIME_CHAOS,DetectRegime(f),"DetectRegime chaos");
+  // chaos
+  ResetRegimeFeature(f);
+  f.bos=true;
+  f.sweep=true;
+  f.volume_spike=true;
+  f.atr=0.02;
+  f.stddev=0.005;
+  AssertEqual(REGIME_CHAOS,DetectRegime(f),"DetectRegime chaos");
 
    // unknown
    ResetRegimeFeature(f);
