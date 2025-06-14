@@ -39,7 +39,61 @@ bool DetectTrapZone(const MqlRates rates[], const int bars)
    if(range<=0.0)
       return(false);
    double threshold=range*0.2;
-   return(rates[0].close>max_high-threshold || rates[0].close<min_low+threshold);
+  return(rates[0].close>max_high-threshold || rates[0].close<min_low+threshold);
   }
+
+#ifdef OB_RETEST_OVERLAY_INDICATOR
+
+#property indicator_chart_window
+#property indicator_buffers 0
+
+input color InpOBRectColor = clrOrange;  // rectangle color
+input int   InpOBRectWidth = 1;          // rectangle border width
+
+int OnInit()
+  {
+   return(INIT_SUCCEEDED);
+  }
+
+int OnCalculate(const int rates_total,
+                const int prev_calculated,
+                const datetime &time[],
+                const double &open[],
+                const double &high[],
+                const double &low[],
+                const double &close[],
+                const long &tick_volume[],
+                const long &volume[],
+                const int &spread[])
+  {
+   int start=(prev_calculated==0)?1:prev_calculated-1;
+   for(int bar=start; bar<rates_total-1; bar++)
+     {
+      double prev_high=high[bar+1];
+      double prev_low =low[bar+1];
+      bool down_retest=(high[bar]>prev_high && close[bar]<prev_high);
+      bool up_retest  =(low[bar]<prev_low  && close[bar]>prev_low);
+      if(down_retest || up_retest)
+        {
+         string rect=StringFormat("ob_rect_%d",bar);
+         if(ObjectFind(0,rect)<0)
+            ObjectCreate(0,rect,OBJ_RECTANGLE,0,time[bar+1],prev_low,time[bar],prev_high);
+         else
+            ObjectMove(0,rect,0,time[bar+1],prev_low);
+         ObjectMove(0,rect,1,time[bar],prev_high);
+         ObjectSetInteger(0,rect,OBJPROP_COLOR,InpOBRectColor);
+         ObjectSetInteger(0,rect,OBJPROP_WIDTH,InpOBRectWidth);
+
+         string arrow=StringFormat("ob_retest_%d",bar);
+         if(ObjectFind(0,arrow)<0)
+            ObjectCreate(0,arrow,OBJ_ARROW,0,time[bar],close[bar]);
+         ObjectSetInteger(0,arrow,OBJPROP_COLOR,InpOBRectColor);
+         ObjectSetDouble(0,arrow,OBJPROP_PRICE,close[bar]);
+        }
+     }
+   return(rates_total);
+  }
+
+#endif // OB_RETEST_OVERLAY_INDICATOR
 
 #endif // OB_RETEST_MQH
