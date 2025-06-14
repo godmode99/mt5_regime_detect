@@ -35,7 +35,6 @@ bos,trend_dir,range_compression,volume_spike,divergent,sweep,ob_retest,candle_st
 ```
 
 ## Field Version/Change Log
-
-| Version | Date | Change Description |
+| Date | Field Name | Change Description |
 | --- | --- | --- |
-| | | |
+| 2025-06-13 | RegimeFeature struct | Initial implementation of all fields and indicator logic. |
