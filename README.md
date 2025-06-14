@@ -46,6 +46,7 @@ mt5_regime_detect/
 │   ├── session_tools.mqh            # logic session/context
 │   ├── session_display.mqh          # overlay session zones + news icon (define SESSION_DISPLAY_INDICATOR)
 │   ├── atr_tools.mqh                # ATR & StdDev calculations + overlay indicator
+│   ├── stddev_display.mqh           # subwindow StdDev line with threshold alert (define STDDEV_DISPLAY_INDICATOR)
 │   ├── ma_slope.mqh                 # moving average slope
 │   ├── rsi_tools.mqh                # RSI indicator
 │   └── regime_classifier.mqh        # classify market regime
