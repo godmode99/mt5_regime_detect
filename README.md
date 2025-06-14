@@ -30,6 +30,22 @@
 
 ---
 
+## 🛠 **Setup in MetaTrader 5**
+
+Place the entire `EA/` directory and the `indicators/` folder inside your terminal's `MQL5/Experts` directory.
+
+```plaintext
+MQL5/Experts/
+├── EA/
+│   └── RegimeMasterEA.mq5
+└── indicators/
+    ├── atr_tools.mqh
+    └── ...
+```
+
+All `.mqh` files in `indicators/` are included by `RegimeMasterEA.mq5` using relative paths such as `..\indicators\atr_tools.mqh`. Keep this layout exactly as shipped.
+
+Missing files will produce "undeclared identifier" errors when functions like `CalcATR` or `DetectBOS` are referenced.
 ## 🧩 **Project Structure**
 
 ```plaintext
