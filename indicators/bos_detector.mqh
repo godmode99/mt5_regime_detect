@@ -36,7 +36,7 @@ bool DetectBOS(const MqlRates rates[], const int shift)
 //|         bars    - number of previous bars to check               |
 //| output: true if BOS pattern detected                             |
 //+------------------------------------------------------------------+
-bool DetectBOS(const MqlRates rates[], const int bars)
+bool DetectBOSLookback(const MqlRates rates[], const int bars)
   {
    //--- ensure enough bars are available
    if(bars<=0 || ArraySize(rates)<=bars)

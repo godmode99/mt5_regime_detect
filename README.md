@@ -61,6 +61,7 @@ mt5_regime_detect/
 │   └── ExportUtils.mqh              # function ช่วย export csv/json, log
 ├── indicators/
 │   ├── bos_detector.mqh             # logic หา BOS + overlay เส้น/ลูกศร
+│   │                                   # ใช้ DetectBOS() หรือ DetectBOSLookback() กำหนด lookback ได้
 │   ├── sweep_detector.mqh           # logic sweep + overlay vertical line (define SWEEP_DETECTOR_OVERLAY_INDICATOR)
 │   ├── volume_tools.mqh             # logic volume spike/divergent
 │   ├── volume_display.mqh           # subwindow volume chart with spike/divergence highlight
