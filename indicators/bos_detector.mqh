@@ -115,4 +115,74 @@ TrendDirection GetTrendDirection(const MqlRates rates[], const int bars)
    return(TREND_NONE);
   }
 
+#ifdef BOS_DETECTOR_OVERLAY_INDICATOR
+
+#property indicator_chart_window
+#property indicator_buffers 0
+
+input color InpBOSLineColor  = clrSilver;       // swing level line color
+input color InpBOSArrowColor = clrRed;          // BOS arrow color
+input ENUM_ARROW_SYMBOL InpBOSArrow = SYMBOL_ARROWUP; // arrow style
+input int   InpBOSLookback   = 3;               // lookback bars for swing
+
+int OnInit()
+  {
+   return(INIT_SUCCEEDED);
+  }
+
+int OnCalculate(const int rates_total,
+                const int prev_calculated,
+                const datetime &time[],
+                const double &open[],
+                const double &high[],
+                const double &low[],
+                const double &close[],
+                const long &tick_volume[],
+                const long &volume[],
+                const int &spread[])
+  {
+   int start = (prev_calculated==0) ? InpBOSLookback : prev_calculated-1;
+   for(int bar=start; bar<rates_total-1; bar++)
+     {
+      // calculate swing levels
+      double prev_high = high[bar+1];
+      double prev_low  = low[bar+1];
+      for(int i=bar+2; i<=bar+InpBOSLookback && i<rates_total; i++)
+        {
+         if(high[i] > prev_high)
+            prev_high = high[i];
+         if(low[i]  < prev_low)
+            prev_low = low[i];
+        }
+
+      // draw horizontal lines
+      string name_high = StringFormat("bos_high_%d", bar);
+      if(ObjectFind(0,name_high)<0)
+         ObjectCreate(0,name_high,OBJ_HLINE,0,time[bar],prev_high);
+      ObjectSetDouble(0,name_high,OBJPROP_PRICE,prev_high);
+      ObjectSetInteger(0,name_high,OBJPROP_COLOR,InpBOSLineColor);
+
+      string name_low = StringFormat("bos_low_%d", bar);
+      if(ObjectFind(0,name_low)<0)
+         ObjectCreate(0,name_low,OBJ_HLINE,0,time[bar],prev_low);
+      ObjectSetDouble(0,name_low,OBJPROP_PRICE,prev_low);
+      ObjectSetInteger(0,name_low,OBJPROP_COLOR,InpBOSLineColor);
+
+      // draw arrow when BOS detected
+      if(DetectBOS(high, low, bar, InpBOSLookback))
+        {
+         string arrow_name = StringFormat("bos_arrow_%d", bar);
+         double price = (high[bar] > prev_high) ? high[bar] : low[bar];
+         if(ObjectFind(0,arrow_name)<0)
+            ObjectCreate(0,arrow_name,OBJ_ARROW,0,time[bar],price);
+         ObjectSetInteger(0,arrow_name,OBJPROP_ARROWCODE,InpBOSArrow);
+         ObjectSetInteger(0,arrow_name,OBJPROP_COLOR,InpBOSArrowColor);
+         ObjectSetDouble(0,arrow_name,OBJPROP_PRICE,price);
+        }
+     }
+   return(rates_total);
+  }
+
+#endif // BOS_DETECTOR_OVERLAY_INDICATOR
+
 #endif // BOS_DETECTOR_MQH
