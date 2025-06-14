@@ -7,7 +7,7 @@
 //|         bars    - number of bars to analyze                      |
 //| output: integer signal code                                      |
 //+------------------------------------------------------------------+
-int GetMTFSignal(const MqlRates rates[], const int bars)
+int GetMTFSignal(const MqlRates &rates[], const int bars)
   {
    //--- gather higher and lower timeframe data
    MqlRates htf[];                     // H1 timeframe for broader trend/BOS

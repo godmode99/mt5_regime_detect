@@ -9,7 +9,7 @@
 //|         shift   - bar index to evaluate                           |
 //| output: true if BOS pattern found                                 |
 //+------------------------------------------------------------------+
-bool DetectBOS(const MqlRates rates[], const int shift)
+bool DetectBOS(const MqlRates &rates[], const int shift)
   {
    const int window = 3;
    if(shift + window >= ArraySize(rates))
@@ -36,7 +36,7 @@ bool DetectBOS(const MqlRates rates[], const int shift)
 //|         bars    - number of previous bars to check               |
 //| output: true if BOS pattern detected                             |
 //+------------------------------------------------------------------+
-bool DetectBOSLookback(const MqlRates rates[], const int bars)
+bool DetectBOSLookback(const MqlRates &rates[], const int bars)
   {
    //--- ensure enough bars are available
    if(bars<=0 || ArraySize(rates)<=bars)
@@ -103,7 +103,7 @@ bool DetectBOS(const double &high[],  // high price series
 //|         bars    - number of bars to analyze                       |
 //| output: TrendDirection enumeration value                          |
 //+------------------------------------------------------------------+
-TrendDirection GetTrendDirection(const MqlRates rates[], const int bars)
+TrendDirection GetTrendDirection(const MqlRates &rates[], const int bars)
   {
    if(bars<=0 || ArraySize(rates)<=bars)
       return(TREND_NONE);

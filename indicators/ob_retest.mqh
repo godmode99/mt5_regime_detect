@@ -7,7 +7,7 @@
 //|         shift   - bar index to evaluate                           |
 //| output: true if retest pattern found                              |
 //+------------------------------------------------------------------+
-bool DetectOBRetest(const MqlRates rates[], const int shift)
+bool DetectOBRetest(const MqlRates &rates[], const int shift)
   {
    if(shift+1>=ArraySize(rates))
       return(false);
@@ -24,7 +24,7 @@ bool DetectOBRetest(const MqlRates rates[], const int shift)
 //|         bars    - analysis window                                 |
 //| output: true if trap zone detected                                |
 //+------------------------------------------------------------------+
-bool DetectTrapZone(const MqlRates rates[], const int bars)
+bool DetectTrapZone(const MqlRates &rates[], const int bars)
   {
    if(bars<=0 || ArraySize(rates)<=bars)
       return(false);

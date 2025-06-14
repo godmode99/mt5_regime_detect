@@ -7,7 +7,7 @@
 //|         shift   - bar index to evaluate                           |
 //| output: true if sweep pattern detected                            |
 //+------------------------------------------------------------------+
-bool DetectSweep(const MqlRates rates[], const int shift)
+bool DetectSweep(const MqlRates &rates[], const int shift)
   {
    if(shift>=ArraySize(rates))
       return(false);
@@ -24,7 +24,7 @@ bool DetectSweep(const MqlRates rates[], const int shift)
 //|         bars    - bars to evaluate                                |
 //| output: true if compression detected                              |
 //+------------------------------------------------------------------+
-bool DetectRangeCompression(const MqlRates rates[], const int bars)
+bool DetectRangeCompression(const MqlRates &rates[], const int bars)
   {
    if(bars<=0 || ArraySize(rates)<=bars)
       return(false);
@@ -46,7 +46,7 @@ bool DetectRangeCompression(const MqlRates rates[], const int bars)
 //|         bars    - number of bars to analyze                      |
 //| output: true if sweep condition detected                         |
 //+------------------------------------------------------------------+
-bool DetectSweep(const MqlRates rates[], const int bars)
+bool DetectSweep(const MqlRates &rates[], const int bars)
   {
    //--- validate array size against requested lookback
    if(bars<=0 || ArraySize(rates)<=bars)

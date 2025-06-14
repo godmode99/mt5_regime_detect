@@ -9,7 +9,7 @@
 //|         shift   - bar index                                       |
 //| output: CandleStrength value                                      |
 //+------------------------------------------------------------------+
-CandleStrength GetCandleStrength(const MqlRates rates[], const int shift)
+CandleStrength GetCandleStrength(const MqlRates &rates[], const int shift)
   {
    if(shift>=ArraySize(rates))
       return(STRENGTH_NONE);
@@ -33,7 +33,7 @@ CandleStrength GetCandleStrength(const MqlRates rates[], const int shift)
 //|         shift   - bar index                                       |
 //| output: CandleDirection value                                     |
 //+------------------------------------------------------------------+
-CandleDirection GetCandleDirection(const MqlRates rates[], const int shift)
+CandleDirection GetCandleDirection(const MqlRates &rates[], const int shift)
   {
    if(shift>=ArraySize(rates))
       return(DIR_NONE);
