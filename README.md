@@ -51,6 +51,10 @@ mt5_regime_detect/
 │   ├── exported_features.csv        # ไฟล์ export dataset
 ├── test/
 │   ├── test_features_indicator.mq5  # script/unit test function/indicator
+│   ├── test_indicator_math.mq5      # validate ATR/StdDev/RSI/MA slope
+│   ├── test_detect_regime_sets.mq5  # verify DetectRegime against preset cases
+│   ├── test_processbar_history.mq5  # history edge-case tests
+│   └── test_processbar_populate.mq5 # mock ProcessBar data population
 ├── docs/
 │   ├── data_dictionary.md           # อธิบาย field/format
 │   └── logic_note.md
