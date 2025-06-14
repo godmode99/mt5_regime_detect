@@ -1,1 +1,4 @@
-# Placeholder for Python tooling dependencies
+# Python tooling dependencies for data processing and testing
+pandas
+numpy
+pytest
